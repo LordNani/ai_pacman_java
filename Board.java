@@ -111,10 +111,10 @@ class Player extends Mover
     int lookX=x,lookY=y;
      Set<Character> set = new HashSet<>();
     switch (direction) {
-      case 'L' -> backwards = 'R';
-      case 'R' -> backwards = 'L';
-      case 'U' -> backwards = 'D';
-      case 'D' -> {}
+      case 'L': backwards = 'R'; break;
+      case 'R': backwards = 'L'; break;
+      case 'U': backwards = 'D'; break;
+      case 'D': {} break;
     }
      char newDirection = backwards;
      while (newDirection == backwards || !isValidDest(lookX,lookY))
@@ -371,10 +371,10 @@ class Ghost extends Mover
     int lookX=x,lookY=y;
     Set<Character> set = new HashSet<>();
     switch (direction) {
-      case 'L' -> backwards = 'R';
-      case 'R' -> backwards = 'L';
-      case 'U' -> backwards = 'D';
-      case 'D' -> {}
+      case 'L': backwards = 'R'; break;
+      case 'R': backwards = 'L'; break;
+      case 'U': backwards = 'D'; break;
+      case 'D': {}
     }
 
     char newDirection = backwards;
@@ -1148,10 +1148,10 @@ public class Board extends JPanel
         player.frameCount=0;
 
       switch (player.currDirection) {
-        case 'L' -> g.drawImage(pacmanLeftImage, player.x, player.y, Color.BLACK, null);
-        case 'R' -> g.drawImage(pacmanRightImage, player.x, player.y, Color.BLACK, null);
-        case 'U' -> g.drawImage(pacmanUpImage, player.x, player.y, Color.BLACK, null);
-        case 'D' -> g.drawImage(pacmanDownImage, player.x, player.y, Color.BLACK, null);
+        case 'L': g.drawImage(pacmanLeftImage, player.x, player.y, Color.BLACK, null); break;
+        case 'R': g.drawImage(pacmanRightImage, player.x, player.y, Color.BLACK, null); break;
+        case 'U': g.drawImage(pacmanUpImage, player.x, player.y, Color.BLACK, null); break;
+        case 'D': g.drawImage(pacmanDownImage, player.x, player.y, Color.BLACK, null); break;
       }
     }
 
