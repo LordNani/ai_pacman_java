@@ -1,6 +1,6 @@
 /* Drew Schuster */
 import java.awt.*;
-import javax.imageio.*;
+
 import javax.swing.JPanel;
 import java.lang.Math;
 import java.util.*;
@@ -44,12 +44,8 @@ class Mover
   public void updateState(boolean[][] state)
   {
     for(int i =0;i<20;i++)
-    {
       for(int j=0;j<20;j++)
-      {
         this.state[i][j] = state[i][j];
-      }
-    }
   }
 
   /* Determines if a set of coordinates is a valid destination.*/
@@ -57,11 +53,7 @@ class Mover
   {
     /* The first statements check that the x and y are inbounds.  The last statement checks the map to
        see if it's a valid location */
-    if ((((x)%20==0) || ((y)%20)==0) && 20<=x && x<400 && 20<= y && y<400 && state[x/20-1][y/20-1] )
-    {
-      return true;
-    }
-    return false;
+    return (((x)%20==0) || ((y)%20)==0) && 20<=x && x<400 && 20<= y && y<400 && state[x/20-1][y/20-1];
   } 
 }
 
@@ -116,23 +108,13 @@ class Player extends Mover
   { 
      int random;
      char backwards='U';
-     int newX=x,newY=y;
-     int lookX=x,lookY=y;
-     Set<Character> set = new HashSet<Character>();
-    switch(direction)
-    {
-      case 'L':
-         backwards='R';
-         break;     
-      case 'R':
-         backwards='L';
-         break;     
-      case 'U':
-         backwards='D';
-         break;     
-      case 'D':
-         backwards='U';
-         break;     
+    int lookX=x,lookY=y;
+     Set<Character> set = new HashSet<>();
+    switch (direction) {
+      case 'L' -> backwards = 'R';
+      case 'R' -> backwards = 'L';
+      case 'U' -> backwards = 'D';
+      case 'D' -> {}
     }
      char newDirection = backwards;
      while (newDirection == backwards || !isValidDest(lookX,lookY))
@@ -142,38 +124,32 @@ class Player extends Mover
          newDirection=backwards;
          break;
        }
-       newX=x;
-       newY=y;
        lookX=x;
        lookY=y;
        random = (int)(Math.random()*4) + 1;
        if (random == 1)
        {
          newDirection = 'L';
-         newX-=increment; 
          lookX-= increment;
        }
        else if (random == 2)
        {
          newDirection = 'R';
-         newX+=increment; 
          lookX+= gridSize;
        }
        else if (random == 3)
        {
          newDirection = 'U';
-         newY-=increment; 
          lookY-=increment;
        }
        else if (random == 4)
        {
          newDirection = 'D';
-         newY+=increment; 
          lookY+=gridSize;
        }
        if (newDirection != backwards)
        {
-         set.add(new Character(newDirection));
+         set.add(newDirection);
        }
      } 
      return newDirection;
@@ -182,11 +158,7 @@ class Player extends Mover
   /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
   public boolean isChoiceDest()
   {
-    if (  x%gridSize==0&& y%gridSize==0 )
-    {
-      return true;
-    }
-    return false;
+    return x % gridSize == 0 && y % gridSize == 0;
   }
 
   /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
@@ -207,7 +179,7 @@ class Player extends Mover
          }
          else if (y == 9*gridSize && x < 2 * gridSize)
          {
-           x = max - gridSize*1;
+           x = max - gridSize;
            teleport = true; 
          }
          break;     
@@ -218,7 +190,7 @@ class Player extends Mover
          }
          else if (y == 9*gridSize && x > max - gridSize*2)
          {
-           x = 1*gridSize;
+           x = gridSize;
            teleport=true;
          }
          break;     
@@ -282,7 +254,7 @@ class Player extends Mover
              x -= increment;
            else if (y == 9*gridSize && x < 2 * gridSize)
            {
-             x = max - gridSize*1;
+             x = max - gridSize;
              teleport = true; 
            }
            break;     
@@ -291,7 +263,7 @@ class Player extends Mover
              x+= increment;
            else if (y == 9*gridSize && x > max - gridSize*2)
            {
-             x = 1*gridSize;
+             x = gridSize;
              teleport=true;
            }
            break;     
@@ -388,11 +360,7 @@ class Ghost extends Mover
   /* Determines if the location is one where the ghost has to make a decision*/ 
   public boolean isChoiceDest()
   {
-    if (  x%gridSize==0&& y%gridSize==0 )
-    {
-      return true;
-    }
-    return false;
+    return x % gridSize == 0 && y % gridSize == 0;
   }
 
   /* Chooses a new direction randomly for the ghost to move */
@@ -400,23 +368,13 @@ class Ghost extends Mover
   { 
     int random;
     char backwards='U';
-    int newX=x,newY=y;
     int lookX=x,lookY=y;
-    Set<Character> set = new HashSet<Character>();
-    switch(direction)
-    {
-      case 'L':
-         backwards='R';
-         break;     
-      case 'R':
-         backwards='L';
-         break;     
-      case 'U':
-         backwards='D';
-         break;     
-      case 'D':
-         backwards='U';
-         break;     
+    Set<Character> set = new HashSet<>();
+    switch (direction) {
+      case 'L' -> backwards = 'R';
+      case 'R' -> backwards = 'L';
+      case 'U' -> backwards = 'D';
+      case 'D' -> {}
     }
 
     char newDirection = backwards;
@@ -430,8 +388,6 @@ class Ghost extends Mover
         break;
       }
 
-      newX=x;
-      newY=y;
       lookX=x;
       lookY=y;
       
@@ -440,30 +396,26 @@ class Ghost extends Mover
       if (random == 1)
       {
         newDirection = 'L';
-        newX-=increment; 
         lookX-= increment;
       }
       else if (random == 2)
       {
         newDirection = 'R';
-        newX+=increment; 
         lookX+= gridSize;
       }
       else if (random == 3)
       {
         newDirection = 'U';
-        newY-=increment; 
         lookY-=increment;
       }
       else if (random == 4)
       {
         newDirection = 'D';
-        newY+=increment; 
         lookY+=gridSize;
       }
       if (newDirection != backwards)
       {
-        set.add(new Character(newDirection));
+        set.add(newDirection);
       }
     } 
     return newDirection;
@@ -622,6 +574,7 @@ public class Board extends JPanel
     }
     catch(Exception e)
     {
+      System.out.println(e.getMessage());
     }
   }
 
@@ -635,8 +588,8 @@ public class Board extends JPanel
       out.println(score);
       out.close();
     }
-    catch(Exception e)
-    {
+    catch(Exception e) {
+      e.printStackTrace();
     }
     highScore=score;
     clearHighScores=true;
@@ -652,8 +605,8 @@ public class Board extends JPanel
       out.println("0");
       out.close();
     }
-    catch(Exception e)
-    {
+    catch(Exception e) {
+      e.printStackTrace();
     }
     highScore=0;
     clearHighScores=true;
@@ -1194,20 +1147,11 @@ public class Board extends JPanel
       if (player.frameCount >=10)
         player.frameCount=0;
 
-      switch(player.currDirection)
-      {
-        case 'L':
-           g.drawImage(pacmanLeftImage,player.x,player.y,Color.BLACK,null);
-           break;     
-        case 'R':
-           g.drawImage(pacmanRightImage,player.x,player.y,Color.BLACK,null);
-           break;     
-        case 'U':
-           g.drawImage(pacmanUpImage,player.x,player.y,Color.BLACK,null);
-           break;     
-        case 'D':
-           g.drawImage(pacmanDownImage,player.x,player.y,Color.BLACK,null);
-           break;     
+      switch (player.currDirection) {
+        case 'L' -> g.drawImage(pacmanLeftImage, player.x, player.y, Color.BLACK, null);
+        case 'R' -> g.drawImage(pacmanRightImage, player.x, player.y, Color.BLACK, null);
+        case 'U' -> g.drawImage(pacmanUpImage, player.x, player.y, Color.BLACK, null);
+        case 'D' -> g.drawImage(pacmanDownImage, player.x, player.y, Color.BLACK, null);
       }
     }
 
