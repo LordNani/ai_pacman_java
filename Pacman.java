@@ -78,10 +78,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
     b.repaint(0,0,600,20);
     b.repaint(0,420,600,40);
     b.repaint(b.player.x-20,b.player.y-20,80,80);
-    b.repaint(b.ghost1.x-20,b.ghost1.y-20,80,80);
-    b.repaint(b.ghost2.x-20,b.ghost2.y-20,80,80);
-    b.repaint(b.ghost3.x-20,b.ghost3.y-20,80,80);
-    b.repaint(b.ghost4.x-20,b.ghost4.y-20,80,80);
+
   }
 
   /* Steps the screen forward one frame */
@@ -118,7 +115,6 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
       if (currTime - titleTimer >= 5000)
       {
         b.titleScreen = false;
-        b.demo = true;
         titleTimer = -1;
       }
       b.repaint();
@@ -152,25 +148,9 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
     {
       /* The pacman player has two functions, demoMove if we're in demo mode and move if we're in
          user playable mode.  Call the appropriate one here */
-      if (b.demo)
-      {
-        b.player.demoMove();
-      }
-      else
-      {
-        b.player.move();
-      }
-
+      b.player.move();
       /* Also move the ghosts, and update the pellet states */
-//      b.ghost1.move();
-//      b.ghost2.move();
-//      b.ghost3.move();
-//      b.ghost4.move();
       b.player.updatePellet();
-//      b.ghost1.updatePellet();
-//      b.ghost2.updatePellet();
-//      b.ghost3.updatePellet();
-//      b.ghost4.updatePellet();
     }
 
     /* We either have a new game or the user has died, either way we have to reset the board */
@@ -192,14 +172,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
       b.player.desiredDirection='L';
       b.player.x = 200;
       b.player.y = 300;
-      b.ghost1.x = 180;
-      b.ghost1.y = 180;
-      b.ghost2.x = 200;
-      b.ghost2.y = 180;
-      b.ghost3.x = 220;
-      b.ghost3.y = 180;
-      b.ghost4.x = 220;
-      b.ghost4.y = 180;
+
 
       /* Advance a frame to display main state*/
       b.repaint(0,0,600,600);
@@ -233,14 +206,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
       return;
     }
     /* Pressing a key during a demo kills the demo mode and starts a new game */
-    else if (b.demo)
-    {
-      b.demo=false;
-      /* Stop any pacman eating sounds */
-      b.sounds.nomNomStop();
-      b.New=1;
-      return;
-    }
+
 
     /* Otherwise, key presses control the player! */ 
     switch(e.getKeyCode())
