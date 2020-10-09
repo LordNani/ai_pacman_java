@@ -1,11 +1,6 @@
-/* Drew Schuster */
-
-import ai.Sensor;
 
 import java.awt.*;
-
 import javax.swing.JPanel;
-import java.lang.Math;
 import java.util.*;
 import java.io.*;
 
@@ -18,18 +13,12 @@ class Mover {
     /* State contains the game map */
     boolean[][] state;
 
-    /* gridSize is the size of one square in the game.
-       max is the height/width of the game.
-       increment is the speed at which the object moves,
-       1 increment per move() call */
     int gridSize = 20;
-    int max;
-    int increment;
+    int velocity;
 
     /* Generic constructor */
     public Mover() {
-        increment = 4;
-        max = 400;
+        velocity = 3;
         state = new boolean[gridSize -1][gridSize -1];
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
@@ -110,20 +99,20 @@ class Player extends Mover {
         ) {
             switch (desiredDirection) {
                 case 'L':
-                    if (isValidDest(x - increment, y))
-                        x -= increment;
+                    if (isValidDest(x - velocity, y))
+                        x -= velocity;
                     break;
                 case 'R':
                     if (isValidDest(x + gridSize, y))
-                        x += increment;
+                        x += velocity;
                     break;
                 case 'U':
-                    if (isValidDest(x, y - increment))
-                        y -= increment;
+                    if (isValidDest(x, y - velocity))
+                        y -= velocity;
                     break;
                 case 'D':
                     if (isValidDest(x, y + gridSize))
-                        y += increment;
+                        y += velocity;
                     break;
             }
         }
@@ -131,22 +120,22 @@ class Player extends Mover {
         if (lastX == x && lastY == y) {
             switch (currDirection) {
                 case 'L':
-                    if (isValidDest(x - increment, y))
-                        x -= increment;
+                    if (isValidDest(x - velocity, y))
+                        x -= velocity;
 
                     break;
                 case 'R':
                     if (isValidDest(x + gridSize, y))
-                        x += increment;
+                        x += velocity;
 
                     break;
                 case 'U':
-                    if (isValidDest(x, y - increment))
-                        y -= increment;
+                    if (isValidDest(x, y - velocity))
+                        y -= velocity;
                     break;
                 case 'D':
                     if (isValidDest(x, y + gridSize))
-                        y += increment;
+                        y += velocity;
                     break;
             }
         }
