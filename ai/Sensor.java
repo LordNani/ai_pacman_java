@@ -3,11 +3,11 @@ import java.util.Random;
 
 public class Sensor {
     int finishTile = 0;
-    int[] possibleFinishLocations = {170};
+    int[] possibleFinishLocations = {0};
     public Sensor(){
         Random rnd = new Random(System.currentTimeMillis());
         finishTile = possibleFinishLocations[rnd.nextInt( possibleFinishLocations.length)];
-        System.out.println("Finish Tile is " + finishTile + ", or " + finishTile/19 + " " + finishTile % 19);
+        System.out.println("Finish Tile is " + finishTile + ", or " + finishTile/20 + " " + finishTile % 20);
     }
 
     public int getFinishLocation() {return finishTile;};

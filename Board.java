@@ -548,7 +548,7 @@ public class Board extends JPanel {
         }
 
         traversedTiles[(player.x)/gridSize][(player.y)/gridSize] = !player.finished;
-        System.out.println(player.finished);
+//        System.out.println(player.finished);
         g.setColor(Color.ORANGE);
 
         // Drawing traversed path

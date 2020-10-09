@@ -131,7 +131,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 //            System.out.println(b.player.x + ":" + b.player.y);
 //            b.player.finished = false;
             if(b.player.finished){
-                b.stopped = true;
+                b.New = 1;
                 System.out.println("!!!WIN!!!");
             }
             b.player.finished = sensor.isOnFinish(b.player.x, b.player.y, b.gridSize);
@@ -153,7 +153,6 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             b.finishTile = sensor.getFinishLocation();
             /* Advance a frame to display main state*/
             b.repaint(0, 0, 600, 600);
-            b.reset();
             /*Start advancing frames once again*/
             b.stopped = false;
             frameTimer.start();
