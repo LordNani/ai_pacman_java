@@ -1,6 +1,11 @@
+/* Drew Schuster */
+
+import ai.Sensor;
 
 import java.awt.*;
+
 import javax.swing.JPanel;
+import java.lang.Math;
 import java.util.*;
 import java.io.*;
 
@@ -13,12 +18,18 @@ class Mover {
     /* State contains the game map */
     boolean[][] state;
 
+    /* gridSize is the size of one square in the game.
+       max is the height/width of the game.
+       increment is the speed at which the object moves,
+       1 increment per move() call */
     int gridSize = 20;
-    int velocity;
+    int max;
+    int increment;
 
     /* Generic constructor */
     public Mover() {
-        velocity = 3;
+        increment = 4;
+        max = 400;
         state = new boolean[gridSize -1][gridSize -1];
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
@@ -45,9 +56,8 @@ class Mover {
 /* This is the pacman object */
 class Player extends Mover {
     /* Direction is used in demoMode, currDirection and desiredDirection are used in non demoMode*/
-    char direction;
-    char currDirection;
-    char desiredDirection;
+    int currDirection;
+    int desiredDirection;
 
     /* Keeps track of pellets eaten to determine end of game */
     int pelletsEaten;
@@ -79,8 +89,8 @@ class Player extends Mover {
         this.x = x;
         this.y = y;
         finished = false;
-        currDirection = 'L';
-        desiredDirection = 'L';
+        currDirection = 3;
+        desiredDirection = 3;
     }
 
     /* The move function moves the pacman for one frame in non demo mode */
@@ -90,54 +100,12 @@ class Player extends Mover {
 
         /* Try to turn in the direction input by the user */
         /*Can only turn if we're in center of a grid*/
-        if (x % gridSize == 0 && y % gridSize == 0 ||
-                /* Or if we're reversing*/
-                (desiredDirection == 'L' && currDirection == 'R') ||
-                (desiredDirection == 'R' && currDirection == 'L') ||
-                (desiredDirection == 'U' && currDirection == 'D') ||
-                (desiredDirection == 'D' && currDirection == 'U')
-        ) {
-            switch (desiredDirection) {
-                case 'L':
-                    if (isValidDest(x - velocity, y))
-                        x -= velocity;
-                    break;
-                case 'R':
-                    if (isValidDest(x + gridSize, y))
-                        x += velocity;
-                    break;
-                case 'U':
-                    if (isValidDest(x, y - velocity))
-                        y -= velocity;
-                    break;
-                case 'D':
-                    if (isValidDest(x, y + gridSize))
-                        y += velocity;
-                    break;
-            }
+        if (x % gridSize == 0 && y % gridSize == 0 || (desiredDirection + 2 % 4) == currDirection    ) {
+            moveInDirection(desiredDirection);
         }
         /* If we haven't moved, then move in the direction the pacman was headed anyway */
         if (lastX == x && lastY == y) {
-            switch (currDirection) {
-                case 'L':
-                    if (isValidDest(x - velocity, y))
-                        x -= velocity;
-
-                    break;
-                case 'R':
-                    if (isValidDest(x + gridSize, y))
-                        x += velocity;
-
-                    break;
-                case 'U':
-                    if (isValidDest(x, y - velocity))
-                        y -= velocity;
-                    break;
-                case 'D':
-                    if (isValidDest(x, y + gridSize))
-                        y += velocity;
-                    break;
-            }
+            moveInDirection(currDirection);
         }
 
         /* If we did change direction, update currDirection to reflect that */
@@ -153,6 +121,27 @@ class Player extends Mover {
         else {
             stopped = false;
             frameCount++;
+        }
+    }
+
+    private void moveInDirection(int currDirection) {
+        switch (currDirection) {
+            case 0:
+                if (isValidDest(x, y - increment))
+                    y -= increment;
+                break;
+            case 1:
+                if (isValidDest(x + gridSize, y))
+                    x += increment;
+                break;
+            case 2:
+                if (isValidDest(x, y + gridSize))
+                    y += increment;
+                break;
+            case 3:
+                if (isValidDest(x - increment, y))
+                    x -= increment;
+                break;
         }
     }
 
@@ -559,16 +548,16 @@ public class Board extends JPanel {
                 player.frameCount = 0;
 
             switch (player.currDirection) {
-                case 'L':
+                case 3:
                     g.drawImage(pacmanLeftImage, player.x, player.y, Color.BLACK, null);
                     break;
-                case 'R':
+                case 1:
                     g.drawImage(pacmanRightImage, player.x, player.y, Color.BLACK, null);
                     break;
-                case 'U':
+                case 0:
                     g.drawImage(pacmanUpImage, player.x, player.y, Color.BLACK, null);
                     break;
-                case 'D':
+                case 2:
                     g.drawImage(pacmanDownImage, player.x, player.y, Color.BLACK, null);
                     break;
             }

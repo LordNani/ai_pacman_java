@@ -23,9 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1d575179-a7d5-4235-9f66-0e06021962b3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pacman.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pacman.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ai_pacman_java/Board.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ai_pacman_java/Board.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ai_pacman_java/Mover.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ai_pacman_java/Mover.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ai_pacman_java/Pacman.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ai_pacman_java/Pacman.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ai_pacman_java/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ai_pacman_java/Player.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -141,22 +144,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1602241467577" />
-    <state width="1877" height="242" key="GridCell.Tab.0.bottom" timestamp="1602271333676">
+    <state width="1877" height="242" key="GridCell.Tab.0.bottom" timestamp="1602273226068">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="242" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602271333676" />
-    <state width="1877" height="242" key="GridCell.Tab.0.center" timestamp="1602271333675">
+    <state width="1877" height="242" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602273226068" />
+    <state width="1877" height="242" key="GridCell.Tab.0.center" timestamp="1602273226068">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="242" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602271333675" />
-    <state width="1877" height="242" key="GridCell.Tab.0.left" timestamp="1602271333675">
+    <state width="1877" height="242" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602273226068" />
+    <state width="1877" height="242" key="GridCell.Tab.0.left" timestamp="1602273226067">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="242" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602271333675" />
-    <state width="1877" height="242" key="GridCell.Tab.0.right" timestamp="1602271333676">
+    <state width="1877" height="242" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602273226067" />
+    <state width="1877" height="242" key="GridCell.Tab.0.right" timestamp="1602273226068">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="242" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602271333676" />
+    <state width="1877" height="242" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602273226068" />
     <state x="505" y="256" width="909" height="629" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1602247013880">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

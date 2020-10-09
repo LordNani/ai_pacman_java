@@ -144,9 +144,8 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             frameTimer.stop();
 
             /* Move all game elements back to starting positions and orientations */
-            b.player.currDirection = 'L';
-            b.player.direction = 'L';
-            b.player.desiredDirection = 'L';
+            b.player.currDirection = 3;
+            b.player.desiredDirection = 3;
             b.player.x = 200;
             b.player.y = 300;
             b.player.finished = false;
@@ -183,16 +182,16 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
         /* Otherwise, key presses control the player! */
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
-                b.player.desiredDirection = 'L';
+                b.player.desiredDirection = 3;
                 break;
             case KeyEvent.VK_RIGHT:
-                b.player.desiredDirection = 'R';
+                b.player.desiredDirection = 1;
                 break;
             case KeyEvent.VK_UP:
-                b.player.desiredDirection = 'U';
+                b.player.desiredDirection = 0;
                 break;
             case KeyEvent.VK_DOWN:
-                b.player.desiredDirection = 'D';
+                b.player.desiredDirection = 2;
                 break;
         }
 
