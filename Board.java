@@ -22,16 +22,16 @@ class Mover {
        max is the height/width of the game.
        increment is the speed at which the object moves,
        1 increment per move() call */
-    int gridSize;
+    int gridSize = 20;
     int max;
     int increment;
 
     /* Generic constructor */
     public Mover() {
-        gridSize = 19;
+        gridSize = 20;
         increment = 4;
         max = 400;
-        state = new boolean[gridSize + 1][gridSize + 1];
+        state = new boolean[gridSize -1][gridSize -1];
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
                 state[i][j] = false;
@@ -76,16 +76,13 @@ class Player extends Mover {
     int pelletX;
     int pelletY;
 
-    /* teleport is true when travelling through the teleport tunnels*/
-    boolean teleport;
 
     /* Stopped is set when the pacman is not moving or has been killed */
     boolean stopped = false;
+    boolean finished = false;
 
     /* Constructor places pacman in initial location and orientation */
     public Player(int x, int y) {
-
-        teleport = false;
         pelletsEaten = 0;
         pelletX = x / gridSize - 1;
         pelletY = y / gridSize - 1;
@@ -97,72 +94,14 @@ class Player extends Mover {
         desiredDirection = 'L';
     }
 
-
-    /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
-    public char newDirection() {
-        int random;
-        char backwards = 'U';
-        int lookX = x, lookY = y;
-        Set<Character> set = new HashSet<>();
-        switch (direction) {
-            case 'L':
-                backwards = 'R';
-                break;
-            case 'R':
-                backwards = 'L';
-                break;
-            case 'U':
-                backwards = 'D';
-                break;
-            case 'D': {
-            }
-            break;
-        }
-        char newDirection = backwards;
-        while (newDirection == backwards || !isValidDest(lookX, lookY)) {
-            if (set.size() == 3) {
-                newDirection = backwards;
-                break;
-            }
-            lookX = x;
-            lookY = y;
-            random = (int) (Math.random() * 4) + 1;
-            if (random == 1) {
-                newDirection = 'L';
-                lookX -= increment;
-            } else if (random == 2) {
-                newDirection = 'R';
-                lookX += gridSize;
-            } else if (random == 3) {
-                newDirection = 'U';
-                lookY -= increment;
-            } else if (random == 4) {
-                newDirection = 'D';
-                lookY += gridSize;
-            }
-            if (newDirection != backwards) {
-                set.add(newDirection);
-            }
-        }
-        return newDirection;
-    }
-
-    /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
-    public boolean isChoiceDest() {
-        return x % gridSize == 0 && y % gridSize == 0;
-    }
-
-    /* This function is used for demoMode.  It is copied from the Ghost class.  See that for comments */
-
     /* The move function moves the pacman for one frame in non demo mode */
     public void move() {
-        int gridSize = 20;
         lastX = x;
         lastY = y;
 
         /* Try to turn in the direction input by the user */
         /*Can only turn if we're in center of a grid*/
-        if (x % 20 == 0 && y % 20 == 0 ||
+        if (x % gridSize == 0 && y % gridSize == 0 ||
                 /* Or if we're reversing*/
                 (desiredDirection == 'L' && currDirection == 'R') ||
                 (desiredDirection == 'R' && currDirection == 'L') ||
@@ -248,18 +187,10 @@ public class Board extends JPanel {
     Image pacmanLeftImage = Toolkit.getDefaultToolkit().getImage("img/pacmanleft.jpg");
     Image pacmanRightImage = Toolkit.getDefaultToolkit().getImage("img/pacmanright.jpg");
     Image titleScreenImage = Toolkit.getDefaultToolkit().getImage("img/titleScreen.jpg");
-    Image gameOverImage = Toolkit.getDefaultToolkit().getImage("img/gameOver.jpg");
     Image winScreenImage = Toolkit.getDefaultToolkit().getImage("img/winScreen.jpg");
 
     /* Initialize the player and ghosts */
     Player player = new Player(200, 300);
-
-    /* Timer is used for playing sound effects and animations */
-    long timer = System.currentTimeMillis();
-
-    /* Dying is used to count frames in the dying animation.  If it's non-zero,
-       pacman is in the process of dying */
-    int dying = 0;
 
     /* Score information */
     int currScore;
@@ -267,8 +198,6 @@ public class Board extends JPanel {
 
     /* if the high scores have been cleared, we have to update the top of the screen to reflect that */
     boolean clearHighScores = false;
-
-    int numLives = 2;
 
     /*Contains the game map, passed to player and ghosts */
     boolean[][] state;
@@ -351,9 +280,8 @@ public class Board extends JPanel {
 
     /* Reset occurs on a new game*/
     public void reset() {
-        numLives = 2;
-        state = new boolean[19][19];
-        pellets = new boolean[20][20];
+        state = new boolean[gridSize - 1][gridSize - 1];
+        pellets = new boolean[gridSize][gridSize];
 
         /* Clear state and pellets arrays */
         for (int i = 0; i < state.length; i++) {
@@ -402,10 +330,6 @@ public class Board extends JPanel {
         /*Clear the bottom bar*/
         g.fillRect(0, max + 5, 600, gridSize);
         g.setColor(Color.YELLOW);
-        for (int i = 0; i < numLives; i++) {
-            /*Draw each life */
-            g.fillOval(gridSize * (i + 1), max + 5, gridSize, gridSize);
-        }
         /* Draw the menu items */
         g.setColor(Color.YELLOW);
         g.setFont(font);
@@ -419,6 +343,9 @@ public class Board extends JPanel {
         manually.  Whenever I draw a wall, I call updateMap to invalidate those coordinates.  This way the pacman
         and ghosts know that they can't traverse this area */
     public void drawBoard(Graphics g) {
+
+
+
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 600, 600);
         g.setColor(Color.BLACK);
@@ -545,11 +472,6 @@ public class Board extends JPanel {
         }
     }
 
-    /* Draws one individual pellet.  Used to redraw pellets that ghosts have run over */
-    public void fillPellet(int x, int y, Graphics g) {
-        g.setColor(Color.YELLOW);
-        g.fillOval(x * 20 + 28, y * 20 + 28, 4, 4);
-    }
 
     /* This is the main function that draws one entire frame of the game */
     public void paint(Graphics g) {
@@ -577,16 +499,7 @@ public class Board extends JPanel {
             return;
         }
 
-        /* If this is the game over screen, draw the game over screen and return */
-        else if (overScreen) {
-            g.setColor(Color.BLACK);
-            g.fillRect(0, 0, 600, 600);
-            g.drawImage(gameOverImage, 0, 0, Color.BLACK, null);
-            New = 1;
-            /* Stop any pacman eating sounds */
-            sounds.nomNomStop();
-            return;
-        }
+
 
         /* If need to update the high scores, redraw the top menu bar */
         if (clearHighScores) {
@@ -617,25 +530,7 @@ public class Board extends JPanel {
             g.setColor(Color.YELLOW);
             g.setFont(font);
             g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
-            New++;
-        }
-        /* Second frame of new game */
-        else if (New == 2) {
-            New++;
-        }
-        /* Third frame of new game */
-        else if (New == 3) {
-            New++;
-            /* Play the newGame sound effect */
-            sounds.newGame();
-            timer = System.currentTimeMillis();
-            return;
-        }
-        /* Fourth frame of new game */
-        else if (New == 4) {
-            /* Stay in this state until the sound effect is over */
-            New = 0;
-            return;
+            New =0;
         }
 
         /* Delete the players and ghosts */
@@ -710,9 +605,7 @@ public class Board extends JPanel {
             }
         }
 
-        /* Draw the border around the game in case it was overwritten by ghost movement or something */
-        g.setColor(Color.WHITE);
-        g.drawRect(19, 19, 382, 382);
+
 
     }
 }

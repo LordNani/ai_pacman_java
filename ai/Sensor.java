@@ -10,7 +10,8 @@ public class Sensor {
         System.out.println("Finish Tile is " + finishTile + ", or " + finishTile/19 + " " + finishTile % 19);
     }
 
-    public boolean isOnFinish(int pacmanX, int pacmanY, int gridWidth, int gridHeight, int gridSize){
-        return true;
+    public boolean isOnFinish(int pacmanX, int pacmanY, int gridSize){
+        System.out.println(pacmanY / gridSize * gridSize +  pacmanX/ gridSize);
+        return pacmanX / gridSize + pacmanY % gridSize == finishTile;
     }
 }
