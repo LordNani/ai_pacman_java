@@ -61,6 +61,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
     /* Start the timer */
     frameTimer.start();
 
+
     b.requestFocus();
   }
 
