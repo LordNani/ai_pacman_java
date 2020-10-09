@@ -1,5 +1,5 @@
 /* Drew Schuster */
-import java.io.*;
+
 import java.net.URL;
 import javax.sound.sampled.*;
 
@@ -61,17 +61,5 @@ public class GameSounds{
         nomNom.setFramePosition(0);
     }
     
-    /* Play new game sound */
-    public void newGame(){
-        newGame.stop();
-        newGame.setFramePosition(0);
-        newGame.start();
-    }
-    
-    /* Play pacman death sound */
-    public void death(){
-        death.stop();
-        death.setFramePosition(0);
-        death.start();
-    }
+
 }

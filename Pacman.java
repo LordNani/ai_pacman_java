@@ -128,8 +128,14 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             /* Also move the ghosts, and update the pellet states */
             b.player.updatePellet();
 
-            System.out.println(b.player.x + ":" + b.player.y);
+//            System.out.println(b.player.x + ":" + b.player.y);
+//            b.player.finished = false;
+            if(b.player.finished){
+                b.stopped = true;
+                System.out.println("!!!WIN!!!");
+            }
             b.player.finished = sensor.isOnFinish(b.player.x, b.player.y, b.gridSize);
+
         }
 
         /* We either have a new game or the user has died, either way we have to reset the board */
@@ -144,10 +150,10 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             b.player.x = 200;
             b.player.y = 300;
             b.player.finished = false;
-
+            b.finishTile = sensor.getFinishLocation();
             /* Advance a frame to display main state*/
             b.repaint(0, 0, 600, 600);
-
+            b.reset();
             /*Start advancing frames once again*/
             b.stopped = false;
             frameTimer.start();

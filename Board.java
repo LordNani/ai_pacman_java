@@ -28,7 +28,6 @@ class Mover {
 
     /* Generic constructor */
     public Mover() {
-        gridSize = 20;
         increment = 4;
         max = 400;
         state = new boolean[gridSize -1][gridSize -1];
@@ -90,6 +89,7 @@ class Player extends Mover {
         this.lastY = y;
         this.x = x;
         this.y = y;
+        finished = false;
         currDirection = 'L';
         desiredDirection = 'L';
     }
@@ -209,6 +209,9 @@ public class Board extends JPanel {
     int gridSize;
     int max;
 
+    boolean[][] traversedTiles;
+    int finishTile = 0;
+
     /* State flags*/
     boolean stopped;
     boolean titleScreen;
@@ -235,6 +238,7 @@ public class Board extends JPanel {
         gridSize = 20;
         New = 0;
         titleScreen = true;
+        traversedTiles = new boolean[gridSize][gridSize];
     }
 
     /* Reads the high scores file and saves it */
@@ -250,19 +254,6 @@ public class Board extends JPanel {
         }
     }
 
-    /* Writes the new high score to a file and sets flag to update it on screen */
-    public void updateScore(int score) {
-        PrintWriter out;
-        try {
-            out = new PrintWriter("highScores.txt");
-            out.println(score);
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        highScore = score;
-        clearHighScores = true;
-    }
 
     /* Wipes the high scores file and sets flag to update it on screen */
     public void clearHighScores() {
@@ -302,6 +293,13 @@ public class Board extends JPanel {
         pellets[9][8] = false;
         pellets[10][8] = false;
 
+
+        //reset traversed
+        for (int i = 0; i < traversedTiles.length; i++) {
+            for (int j = 0; j < traversedTiles.length; j++) {
+                traversedTiles[i][j] = false;
+            }
+        }
     }
 
 
@@ -322,29 +320,11 @@ public class Board extends JPanel {
     }
 
 
-    /* Draws the appropriate number of lives on the bottom left of the screen.
-       Also draws the menu */
-    public void drawLives(Graphics g) {
-        g.setColor(Color.BLACK);
-
-        /*Clear the bottom bar*/
-        g.fillRect(0, max + 5, 600, gridSize);
-        g.setColor(Color.YELLOW);
-        /* Draw the menu items */
-        g.setColor(Color.YELLOW);
-        g.setFont(font);
-        g.drawString("Reset", 100, max + 5 + gridSize);
-        g.drawString("Clear High Scores", 180, max + 5 + gridSize);
-        g.drawString("Exit", 350, max + 5 + gridSize);
-    }
-
 
     /*  This function draws the board.  The pacman board is really complicated and can only feasibly be done
         manually.  Whenever I draw a wall, I call updateMap to invalidate those coordinates.  This way the pacman
         and ghosts know that they can't traverse this area */
     public void drawBoard(Graphics g) {
-
-
 
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 600, 600);
@@ -448,8 +428,9 @@ public class Board extends JPanel {
         updateMap(280, 320, 20, 60);
         g.fillRect(120, 320, 20, 60);
         updateMap(120, 320, 20, 60);
-        drawLives(g);
 
+        g.setColor(Color.GREEN);
+        g.fillRect(gridSize + finishTile/ gridSize * gridSize,gridSize + finishTile % gridSize * gridSize  ,gridSize,gridSize);
 
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
@@ -457,7 +438,6 @@ public class Board extends JPanel {
             }
             System.out.println();
         }
-        Sensor mainSensor = new Sensor();
     }
 
 
@@ -499,8 +479,6 @@ public class Board extends JPanel {
             return;
         }
 
-
-
         /* If need to update the high scores, redraw the top menu bar */
         if (clearHighScores) {
             g.setColor(Color.BLACK);
@@ -511,8 +489,6 @@ public class Board extends JPanel {
             g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
         }
 
-        /* oops is set to true when pacman has lost a life */
-
         /* Game initialization */
         if (New == 1) {
             reset();
@@ -520,7 +496,6 @@ public class Board extends JPanel {
             currScore = 0;
             drawBoard(g);
             drawPellets(g);
-            drawLives(g);
             /* Send the game map to player and all ghosts */
             player.updateState(state);
             /* Don't let the player go in the ghost box*/
@@ -563,15 +538,7 @@ public class Board extends JPanel {
             g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
 
             /* If this was the last pellet */
-            if (player.pelletsEaten == 173) {
-                /*Demo mode can't get a high score */
-                if (currScore > highScore) {
-                    updateScore(currScore);
-                }
-                winScreen = true;
 
-                return;
-            }
         }
 
         /* If we moved to a location without pellets, stop the sounds */
@@ -579,6 +546,19 @@ public class Board extends JPanel {
             /* Stop any pacman eating sounds */
             sounds.nomNomStop();
         }
+
+        traversedTiles[(player.x)/gridSize][(player.y)/gridSize] = !player.finished;
+        System.out.println(player.finished);
+        g.setColor(Color.ORANGE);
+
+        // Drawing traversed path
+        for(int i = 0; i < traversedTiles.length; i++)
+            for(int j = 0; j < traversedTiles.length; j++){
+                if(traversedTiles[i][j])
+                    g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
+
+            }
+
 
         /* Draw the pacman */
         if (player.frameCount < 5) {
