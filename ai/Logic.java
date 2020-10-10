@@ -1,11 +1,13 @@
 package ai;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Logic {
 	private int boardSize;
 	// planned_path contains planned path to the next vertex
 	LinkedList<Integer> planned_path = new LinkedList<>();
+	public ArrayList<Point> convertedPath = new ArrayList<>();
 	// position.path - list of directions from initial position
 	VertexPoint position;
 	Algorithm a;
@@ -25,8 +27,10 @@ public class Logic {
 		if(planned_path.isEmpty()){
 			if(!a.isFinished()){
 				VertexPoint next = (VertexPoint)a.getNextVertex();
-				plannedPoint = next;
+				plannedPoint = new Point(next);
+				System.out.println("planned " + plannedPoint.toString());
 				planned_path = createPathTo(next);
+				convertedPath = convertToPoints(planned_path);
 			}
 			else{
 				System.out.println("We have a problem, this shouldn't happen");
@@ -45,6 +49,30 @@ public class Logic {
 				}
 			}
 			return step;
+	}
+
+	private ArrayList<Point> convertToPoints(LinkedList<Integer> planned_path) {
+		ArrayList<Point> result  = new ArrayList<>();
+		Point currentPoint = new Point(plannedPoint);
+		for(int i = 0; i < planned_path.size(); i++){
+			switch (planned_path.get(i)){
+				case 0:
+					currentPoint.y +=1;
+					break;
+				case 1:
+					currentPoint.x +=1;
+					break;
+				case 2:
+					currentPoint.y -=1;
+					break;
+				case 3:
+					currentPoint.x -=1;
+					break;
+			}
+			result.add(new Point(currentPoint));
+		}
+
+		return result;
 	}
 
 	private LinkedList<Integer> createPathTo(VertexPoint next) {

@@ -20,16 +20,15 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     long timer = -1;
     int boardSize = 20;
 
-	/* framesPerMove defines how often pacman_logic should decide where to go */
-	int framesPerMove = 3;
+    /* framesPerMove defines how often pacman_logic should decide where to go */
+    int framesPerMove = 3;
 
     /* Create a new board */
     Board b = new Board(boardSize);
     Sensor sensor = new Sensor(boardSize);
-//    Logic logic = new Logic(boardSize-1, b.player.getGridPosition(),
-//			new DFSAlgorithm(b.player.getGridPosition()));
-    Logic logic = new Logic(boardSize-1, b.player.getGridPosition(),
-            new BFSAlgorithm(b.player.getGridPosition()));
+    boolean isDFS = true;
+    Logic logic = new Logic(boardSize - 1, b.player.getGridPosition(),
+            new DFSAlgorithm(b.player.getGridPosition()));
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
 
@@ -42,7 +41,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
         /* Create and set up window frame*/
         JFrame f = new JFrame();
-        f.setSize(420, 460);
+        f.setSize(440, 460);
 
         /* Add the board to the frame */
         f.add(b, BorderLayout.CENTER);
@@ -116,7 +115,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
  
     /* If this is the win screen or game over screen, make sure to only stay on the screen for 5 seconds.
        If after 5 seconds the user hasn't pressed a key, go to title screen */
-        else if (b.winScreen ) {
+        else if (b.winScreen) {
             if (timer == -1) {
                 timer = System.currentTimeMillis();
             }
@@ -134,13 +133,14 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
         /* If we have a normal game state, move all pieces and update pellet status */
         if (!newGame) {
-			if(b.player.stableFCount % framesPerMove == 0 && !b.player.inAction){
-				System.out.println("Move "+ b.player.stableFCount / framesPerMove);
-				b.player.inAction=true;
-				b.player.currDirection = logic.makeMove(b.getSurroundingArea());
-				b.player.desiredPoint = b.player.moveInDirection(b.player.currDirection);
-				b.player.inAction=false;
-				b.plannedPoint = logic.plannedPoint;
+            if (b.player.stableFCount % framesPerMove == 0 && !b.player.inAction) {
+                System.out.println("Move " + b.player.stableFCount / framesPerMove);
+                b.player.inAction = true;
+                b.player.currDirection = logic.makeMove(b.getSurroundingArea());
+                b.player.desiredPoint = b.player.moveInDirection(b.player.currDirection);
+                b.player.inAction = false;
+                b.plannedPoint = logic.plannedPoint;
+                b.plannedPath = logic.convertedPath;
 
             }
 
@@ -148,10 +148,13 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
          user playable mode.  Call the appropriate one here */
             b.player.move();
             /* Also move the ghosts, and update the pellet states */
-            if(b.player.finished){
+            if (b.player.finished) {
                 b.titleScreen = true;
                 b.newGame = 1;
                 System.out.println("!!!WIN!!!");
+                logic = isDFS ? new Logic(boardSize - 1, b.player.getGridPosition(),
+                        new BFSAlgorithm(b.player.getGridPosition())) : new Logic(boardSize - 1, b.player.getGridPosition(),
+                        new DFSAlgorithm(b.player.getGridPosition()));
             }
             b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
 
@@ -165,7 +168,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             /* Move all game elements back to starting positions and orientations */
             b.player.current.x = 200;
             b.player.current.y = 300;
-            b.player.currDirection=3;
+            b.player.currDirection = 3;
             b.player.desiredPoint = b.player.moveInDirection(3);
 
             b.player.finished = false;
@@ -190,13 +193,13 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             return;
         }
         /* Pressing a key in the win screen or game over screen goes to the title screen */
-        else if (b.winScreen ) {
+        else if (b.winScreen) {
             b.titleScreen = true;
             b.winScreen = false;
             return;
         }
 
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
             System.exit(0);
         /* Pressing a key during a demo kills the demo mode and starts a new game */
 
@@ -264,10 +267,9 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     }
 
 
-
     /* Main function simply creates a new pacman instance*/
     public static void main(String[] args) {
-       new Pacman().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        new Pacman().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 }

@@ -62,6 +62,7 @@ class Mover {
 public class Board extends JPanel {
 
     public Point plannedPoint;
+    public ArrayList<Point> plannedPath;
     /* Initialize the images*/
     /* For NOT JAR file*/
     Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg");
@@ -88,7 +89,7 @@ public class Board extends JPanel {
 
     /* Game dimensions */
     int gridSize;
-    int max;
+    int offset = 20;
 
     boolean[][] traversedTiles;
     int finishTile = 0;
@@ -114,7 +115,6 @@ public class Board extends JPanel {
         sounds = new GameSounds();
         currScore = 0;
         stopped = false;
-        max = 400;
         gridSize = boardSize;
         newGame = 0;
         titleScreen = true;
@@ -320,20 +320,28 @@ public class Board extends JPanel {
     private void drawPlanned(Graphics g){
 
         traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
-//        System.out.println(player.finished);
         g.setColor(Color.ORANGE);
-
         // Drawing traversed path
         for(int i = 0; i < traversedTiles.length; i++)
-            for(int j = 0; j < traversedTiles.length; j++){
+            for(int j = 0; j < traversedTiles.length; j++)
                 if(traversedTiles[i][j])
                     g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
 
-            }
+        g.setFont(font);
+        for(int i = 0; i < plannedPath.size(); i++){
+            g.setColor(Color.PINK);
+            g.fillRect(plannedPath.get(i).x * gridSize + offset, plannedPath.get(i).y * gridSize + offset, gridSize, gridSize);
+            g.setColor(Color.WHITE);
+            g.drawString(String.valueOf(i), plannedPath.get(i).x * gridSize + offset + offset/2, plannedPath.get(i).y * gridSize + offset+ offset/2);
+
+        }
 
         g.setColor(Color.RED);
-        if(nonNull(plannedPoint))
-            g.fillRect(plannedPoint.x*gridSize,plannedPoint.y*gridSize,gridSize,gridSize);
+        if(nonNull(plannedPoint)) {
+            System.out.println("IN BOARD " + plannedPoint.toString());
+
+            g.fillRect(plannedPoint.x * gridSize + offset, plannedPoint.y * gridSize + offset, gridSize, gridSize);
+        }
     }
 
     /* This is the main function that draws one entire frame of the game */
