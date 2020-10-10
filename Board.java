@@ -57,6 +57,7 @@ class Mover {
 
 /*This board class contains the player, ghosts, pellets, and most of the game logic.*/
 public class Board extends JPanel {
+
     /* Initialize the images*/
     /* For NOT JAR file*/
     Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg");
@@ -80,8 +81,6 @@ public class Board extends JPanel {
     /*Contains the game map, passed to player and ghosts */
     boolean[][] state;
 
-    /* Contains the state of all pellets*/
-    boolean[][] pellets;
 
     /* Game dimensions */
     int gridSize;
@@ -99,15 +98,14 @@ public class Board extends JPanel {
     /* Used to call sound effects */
     GameSounds sounds;
 
-    int lastPelletEatenX = 0;
-    int lastPelletEatenY = 0;
-
     /* This is the font used for the menus */
     Font font = new Font("Monospaced", Font.BOLD, 12);
 	private ai.Point possible_next_point;
 
 	/* Constructor initializes state flags etc.*/
     public Board(int boardSize) {
+
+
         initHighScores();
         sounds = new GameSounds();
         currScore = 0;
@@ -161,7 +159,7 @@ public class Board extends JPanel {
     /* Reset occurs on a new game*/
     public void reset() {
         state = new boolean[gridSize - 1][gridSize - 1];
-        pellets = new boolean[gridSize][gridSize];
+
 
         /* Clear state and pellets arrays */
         for (int i = 0; i < state.length; i++) {
@@ -170,18 +168,6 @@ public class Board extends JPanel {
 //                pellets[i][j] = true;
             }
         }
-
-        /* Handle the weird spots with no pellets*/
-//        for (int i = 5; i < 14; i++) {
-//            for (int j = 5; j < 12; j++) {
-//                pellets[i][j] = false;
-//            }
-//        }
-//        pellets[9][7] = false;
-//        pellets[8][8] = false;
-//        pellets[9][8] = false;
-//        pellets[10][8] = false;
-
 
         //reset traversed
         for (int i = 0; i < traversedTiles.length; i++) {
@@ -199,11 +185,9 @@ public class Board extends JPanel {
     */
     public void updateMap(int x, int y, int width, int height) {
         for (int i = x / gridSize; i < x / gridSize + width / gridSize; i++) {
-
             for (int j = y / gridSize; j < y / gridSize + height / gridSize; j++) {
-
                 state[i - 1][j - 1] = false;
-                pellets[i - 1][j - 1] = false;
+
             }
         }
     }
@@ -330,17 +314,6 @@ public class Board extends JPanel {
     }
 
 
-    /* Draws the pellets on the screen */
-    public void drawPellets(Graphics g) {
-        g.setColor(Color.YELLOW);
-        for (int i = 1; i < 20; i++) {
-            for (int j = 1; j < 20; j++) {
-                if (pellets[i - 1][j - 1])
-                    g.fillOval(i * 20 + 8, j * 20 + 8, 4, 4);
-            }
-        }
-    }
-
 
     /* This is the main function that draws one entire frame of the game */
     public void paint(Graphics g) {
@@ -384,7 +357,6 @@ public class Board extends JPanel {
             player = new Player(200, 300);
             currScore = 0;
             drawBoard(g);
-            drawPellets(g);
             /* Send the game map to player and all ghosts */
             player.updateState(state);
             /* Don't let the player go in the ghost box*/
@@ -399,42 +371,8 @@ public class Board extends JPanel {
 
         /* Delete the players and ghosts */
         g.setColor(Color.BLACK);
-        g.fillRect(player.last.x, player.last.x, 20, 20);
+        g.fillRect(player.last.x, player.last.y, 20, 20);
 
-        /* Eat pellets */
-        if (pellets[player.pelletX][player.pelletY] && newGame != 2 && newGame != 3) {
-            lastPelletEatenX = player.pelletX;
-            lastPelletEatenY = player.pelletY;
-
-            /* Play eating sound */
-            sounds.nomNom();
-
-            /* Increment pellets eaten value to track for end game */
-            player.pelletsEaten++;
-
-            /* Delete the pellet*/
-            pellets[player.pelletX][player.pelletY] = false;
-
-            /* Increment the score */
-            currScore += 50;
-
-            /* Update the screen to reflect the new score */
-            g.setColor(Color.BLACK);
-            g.fillRect(0, 0, 600, 20);
-            g.setColor(Color.YELLOW);
-            g.setFont(font);
-
-            g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
-
-            /* If this was the last pellet */
-
-        }
-
-        /* If we moved to a location without pellets, stop the sounds */
-        else if ((player.pelletX != lastPelletEatenX || player.pelletY != lastPelletEatenY) || player.stopped) {
-            /* Stop any pacman eating sounds */
-            sounds.nomNomStop();
-        }
 
         traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
 //        System.out.println(player.finished);

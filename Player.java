@@ -21,12 +21,12 @@ public class Player extends Mover {
 
 	/* Stopped is set when the pacman is not moving or has been killed */
 	boolean stopped = false;
-
+	boolean finished = false;
 	public boolean inAction=false;
 
 	/* Constructor places pacman in initial location and orientation */
 	public Player(int x, int y) {
-		pelletsEaten = 0;
+		finished = false;
 		pelletX = x / gridSize - 1;
 		pelletY = y / gridSize - 1;
 		this.current = new Point(x,y);
