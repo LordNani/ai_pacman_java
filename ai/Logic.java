@@ -33,15 +33,15 @@ public class Logic {
 		}
 			int step = planned_path.pollFirst();
 			position = moveInDirection(step);
-			if(position.path.isEmpty()){
-				position.path.addLast(step);
-				return step;
+			//if next step is opposite to the last step, just remove both steps from path
+			if(position.path.size()>2){
+				int last = position.path.pollLast();
+				int prev = position.path.pollLast();
+				if((4+last-prev)%4!=2){
+					position.path.addLast(prev);
+					position.path.addLast(last);
+				}
 			}
-			//if next step is opposite to the last step, just remove last step from path
-			if((step+2)%4 == (int)(position.path.peekFirst())){
-				position.path.pollLast();
-			}
-			else position.path.addLast(step);
 			return step;
 	}
 

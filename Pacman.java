@@ -3,6 +3,8 @@
 import ai.DFSAlgorithm;
 import ai.Logic;
 import ai.Sensor;
+import ai.Point;
+import ai.Vertex;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -25,7 +27,8 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
     /* Create a new board */
     Board b = new Board(boardSize);
     Sensor sensor = new Sensor();
-    Logic logic = new Logic(boardSize-1, b.player.getGridPosition(), new DFSAlgorithm());
+    Logic logic = new Logic(boardSize-1, b.player.getGridPosition(),
+			new DFSAlgorithm(b.player.getGridPosition()));
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
 

@@ -6,6 +6,10 @@ import java.util.LinkedList;
 public class DFSAlgorithm implements Algorithm{
 	LinkedList<Vertex> stack = new LinkedList();
 	ArrayList<Vertex> used = new ArrayList<>();
+	public DFSAlgorithm(Vertex v){
+		used.add(v);
+	}
+
 	@Override
 	public boolean isFinished() {
 		return stack.isEmpty();
