@@ -3,8 +3,6 @@
 import ai.DFSAlgorithm;
 import ai.Logic;
 import ai.Sensor;
-import ai.Point;
-import ai.Vertex;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -26,7 +24,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
     /* Create a new board */
     Board b = new Board(boardSize);
-    Sensor sensor = new Sensor();
+    Sensor sensor = new Sensor(boardSize);
     Logic logic = new Logic(boardSize-1, b.player.getGridPosition(),
 			new DFSAlgorithm(b.player.getGridPosition()));
     /* This timer is used to do request new frames be drawn*/
@@ -35,6 +33,8 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
     /* This constructor creates the entire game essentially */
     public Pacman() {
+
+
         b.requestFocus();
 
         /* Create and set up window frame*/
@@ -53,7 +53,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
         f.setResizable(false);
 
         /* Set the New flag to 1 because this is a new game */
-        b.New = 1;
+        b.newGame = 1;
 
         /* Manually call the first frameStep to initialize the game. */
         stepFrame(true);
@@ -78,22 +78,22 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
     public void repaint() {
         b.repaint(0, 0, 600, 20);
         b.repaint(0, 420, 600, 40);
-        b.repaint(b.player.current.x - 20, b.player.current.y - 20, 80, 80);
+        b.repaint(b.player.current.x - boardSize, b.player.current.y - boardSize, boardSize * 4, boardSize * 4);
 
     }
 
     /* Steps the screen forward one frame */
-    public void stepFrame(boolean New) {
+    public void stepFrame(boolean newGame) {
         /* If we aren't on a special screen than the timers can be set to -1 to disable them */
-        if (!b.titleScreen && !b.winScreen && !b.overScreen) {
+        if (!b.titleScreen && !b.winScreen) {
             timer = -1;
             titleTimer = -1;
         }
 
 
-    /* New can either be specified by the New parameter in stepFrame function call or by the state
-       of b.New.  Update New accordingly */
-        New = New || (b.New != 0);
+    /* newGame can either be specified by the newGame parameter in stepFrame function call or by the state
+       of b.newGame.  Update newGame accordingly */
+        newGame = newGame || (b.newGame != 0);
 
     /* If this is the title screen, make sure to only stay on the title screen for 5 seconds.
        If after 5 seconds the user hasn't started a game, start up demo mode */
@@ -113,7 +113,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
  
     /* If this is the win screen or game over screen, make sure to only stay on the screen for 5 seconds.
        If after 5 seconds the user hasn't pressed a key, go to title screen */
-        else if (b.winScreen || b.overScreen) {
+        else if (b.winScreen ) {
             if (timer == -1) {
                 timer = System.currentTimeMillis();
             }
@@ -121,7 +121,6 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             long currTime = System.currentTimeMillis();
             if (currTime - timer >= 1000) {
                 b.winScreen = false;
-                b.overScreen = false;
                 b.titleScreen = true;
                 timer = -1;
             }
@@ -131,7 +130,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
 
         /* If we have a normal game state, move all pieces and update pellet status */
-        if (!New) {
+        if (!newGame) {
 			if(b.player.stableFCount % framesPerMove == 0 && !b.player.inAction){
 				System.out.println("Move "+ b.player.stableFCount / framesPerMove);
 				b.player.inAction=true;
@@ -144,12 +143,9 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
          user playable mode.  Call the appropriate one here */
             b.player.move();
             /* Also move the ghosts, and update the pellet states */
-            b.player.updatePellet();
-
-//            System.out.println(b.player.x + ":" + b.player.y);
-//            b.player.finished = false;
             if(b.player.finished){
-                b.New = 1;
+                b.titleScreen = true;
+                b.newGame = 1;
                 System.out.println("!!!WIN!!!");
             }
             b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
@@ -157,7 +153,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
         }
 
         /* We either have a new game or the user has died, either way we have to reset the board */
-        if (b.stopped || New) {
+        if (newGame) {
             /*Temporarily stop advancing frames */
             frameTimer.stop();
 
@@ -189,12 +185,14 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             return;
         }
         /* Pressing a key in the win screen or game over screen goes to the title screen */
-        else if (b.winScreen || b.overScreen) {
+        else if (b.winScreen ) {
             b.titleScreen = true;
             b.winScreen = false;
-            b.overScreen = false;
             return;
         }
+
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+            System.exit(0);
         /* Pressing a key during a demo kills the demo mode and starts a new game */
 
 
@@ -219,7 +217,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
     /* This function detects user clicks on the menu items on the bottom of the screen */
     public void mousePressed(MouseEvent e) {
-        if (b.titleScreen || b.winScreen || b.overScreen) {
+        if (b.titleScreen || b.winScreen) {
             /* If we aren't in the game where a menu is showing, ignore clicks */
             return;
         }
@@ -230,7 +228,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
         if (400 <= y && y <= 460) {
             if (100 <= x && x <= 150) {
                 /* New game has been clicked */
-                b.New = 1;
+                b.newGame = 1;
             } else if (180 <= x && x <= 300) {
                 /* Clear high scores has been clicked */
                 b.clearHighScores();
@@ -259,6 +257,8 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
     public void keyTyped(KeyEvent e) {
     }
+
+
 
     /* Main function simply creates a new pacman instance*/
     public static void main(String[] args) {

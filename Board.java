@@ -94,8 +94,7 @@ public class Board extends JPanel {
     boolean stopped;
     boolean titleScreen;
     boolean winScreen = false;
-    boolean overScreen = false;
-    int New;
+    int newGame;
 
     /* Used to call sound effects */
     GameSounds sounds;
@@ -115,7 +114,7 @@ public class Board extends JPanel {
         stopped = false;
         max = 400;
         gridSize = boardSize;
-        New = 0;
+        newGame = 0;
         titleScreen = true;
         traversedTiles = new boolean[gridSize][gridSize];
     }
@@ -354,7 +353,7 @@ public class Board extends JPanel {
 
             /* Stop any pacman eating sounds */
             sounds.nomNomStop();
-            New = 1;
+            newGame = 1;
             return;
         }
 
@@ -363,7 +362,7 @@ public class Board extends JPanel {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, 600, 600);
             g.drawImage(winScreenImage, 0, 0, Color.BLACK, null);
-            New = 1;
+            newGame = 1;
             /* Stop any pacman eating sounds */
             sounds.nomNomStop();
             return;
@@ -380,7 +379,7 @@ public class Board extends JPanel {
         }
 
         /* Game initialization */
-        if (New == 1) {
+        if (newGame == 1) {
             reset();
             player = new Player(200, 300);
             currScore = 0;
@@ -395,7 +394,7 @@ public class Board extends JPanel {
             g.setColor(Color.YELLOW);
             g.setFont(font);
             g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
-            New =0;
+            newGame =0;
         }
 
         /* Delete the players and ghosts */
@@ -403,7 +402,7 @@ public class Board extends JPanel {
         g.fillRect(player.last.x, player.last.x, 20, 20);
 
         /* Eat pellets */
-        if (pellets[player.pelletX][player.pelletY] && New != 2 && New != 3) {
+        if (pellets[player.pelletX][player.pelletY] && newGame != 2 && newGame != 3) {
             lastPelletEatenX = player.pelletX;
             lastPelletEatenY = player.pelletY;
 

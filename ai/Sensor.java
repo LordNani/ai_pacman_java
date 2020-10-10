@@ -4,10 +4,11 @@ import java.util.Random;
 public class Sensor {
     int finishTile = 0;
     int[] possibleFinishLocations = {0};
-    public Sensor(){
+    public Sensor(int gridSize){
+
         Random rnd = new Random(System.currentTimeMillis());
         finishTile = possibleFinishLocations[rnd.nextInt( possibleFinishLocations.length)];
-        System.out.println("Finish Tile is " + finishTile + ", or " + finishTile/20 + " " + finishTile % 20);
+        System.out.println("Finish Tile is " + finishTile + ", or " + finishTile/gridSize + " " + finishTile % gridSize);
     }
 
     public int getFinishLocation() {return finishTile;};

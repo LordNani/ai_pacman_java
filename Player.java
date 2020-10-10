@@ -21,7 +21,6 @@ public class Player extends Mover {
 
 	/* Stopped is set when the pacman is not moving or has been killed */
 	boolean stopped = false;
-	boolean finished = false;
 
 	public boolean inAction=false;
 
@@ -32,7 +31,6 @@ public class Player extends Mover {
 		pelletY = y / gridSize - 1;
 		this.current = new Point(x,y);
 		this.last = new Point(current);
-		finished = false;
 		currDirection = 3;
 		desiredPoint = current;
 	}
@@ -61,14 +59,6 @@ public class Player extends Mover {
 			current = moveInDirection(currDirection);
 //			inAction=false;
 		}
-		/* If we haven't moved, then move in the direction the pacman was headed anyway */
-//        if (lastX == x && lastY == y) {
-//            moveInDirection(currDirection);
-//        }
-//        else {
-//			/* If we did change direction, update currDirection to reflect that */
-//            currDirection = desiredDirection;
-//        }
 
 		/* If we didn't move at all, set the stopped flag */
 		if (last.equals(current))
@@ -104,11 +94,5 @@ public class Player extends Mover {
 		return nest_p;
 	}
 
-	/* Update what pellet the pacman is on top of */
-	public void updatePellet() {
-		if (current.x % gridSize == 0 && current.y % gridSize == 0) {
-			pelletX = current.x / gridSize - 1;
-			pelletY = current.y / gridSize - 1;
-		}
-	}
+
 }
