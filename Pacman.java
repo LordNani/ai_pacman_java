@@ -1,5 +1,6 @@
 /* Drew Schuster */
 
+import ai.Logic;
 import ai.Sensor;
 
 import javax.swing.*;
@@ -15,10 +16,15 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
     /* These timers are used to kill title, game over, and victory screens after a set idle period (5 seconds)*/
     long titleTimer = -1;
     long timer = -1;
+    int boardSize = 20;
+
+	/* framesPerMove defines how often pacman_logic should decide where to go */
+	int framesPerMove = 15;
 
     /* Create a new board */
-    Board b = new Board();
+    Board b = new Board(boardSize);
     Sensor sensor = new Sensor();
+    Logic logic = new Logic(boardSize-1);
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
 
@@ -93,7 +99,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             }
 
             long currTime = System.currentTimeMillis();
-            if (currTime - titleTimer >= 5000) {
+            if (currTime - titleTimer >= 1000) {
                 b.titleScreen = false;
                 titleTimer = -1;
             }
@@ -109,7 +115,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             }
 
             long currTime = System.currentTimeMillis();
-            if (currTime - timer >= 5000) {
+            if (currTime - timer >= 1000) {
                 b.winScreen = false;
                 b.overScreen = false;
                 b.titleScreen = true;
@@ -122,6 +128,10 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
         /* If we have a normal game state, move all pieces and update pellet status */
         if (!New) {
+			if(b.player.stableFCount % framesPerMove == 0){
+				b.player.desiredDirection = logic.makeMove(b.getSurroundingArea());
+			}
+
       /* The pacman player has two functions, demoMove if we're in demo mode and move if we're in
          user playable mode.  Call the appropriate one here */
             b.player.move();
@@ -180,20 +190,20 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
 
         /* Otherwise, key presses control the player! */
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                b.player.desiredDirection = 3;
-                break;
-            case KeyEvent.VK_RIGHT:
-                b.player.desiredDirection = 1;
-                break;
-            case KeyEvent.VK_UP:
-                b.player.desiredDirection = 0;
-                break;
-            case KeyEvent.VK_DOWN:
-                b.player.desiredDirection = 2;
-                break;
-        }
+//        switch (e.getKeyCode()) {
+//            case KeyEvent.VK_LEFT:
+//                b.player.desiredDirection = 3;
+//                break;
+//            case KeyEvent.VK_RIGHT:
+//                b.player.desiredDirection = 1;
+//                break;
+//            case KeyEvent.VK_UP:
+//                b.player.desiredDirection = 0;
+//                break;
+//            case KeyEvent.VK_DOWN:
+//                b.player.desiredDirection = 2;
+//                break;
+//        }
 
         repaint();
     }

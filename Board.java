@@ -1,7 +1,7 @@
 /* Drew Schuster */
 
 import ai.Sensor;
-
+import ai.Logic;
 import java.awt.*;
 
 import javax.swing.JPanel;
@@ -13,7 +13,8 @@ import java.io.*;
 /* Both Player and Ghost inherit Mover.  Has generic functions relevant to both*/
 class Mover {
     /* Framecount is used to count animation frames*/
-    int frameCount = 0;
+    public int frameCount = 0;
+    public long stableFCount=0;
 
     /* State contains the game map */
     boolean[][] state;
@@ -28,7 +29,7 @@ class Mover {
 
     /* Generic constructor */
     public Mover() {
-        increment = 4;
+        increment = 20;
         max = 400;
         state = new boolean[gridSize -1][gridSize -1];
         for (int i = 0; i < state.length; i++) {
@@ -51,6 +52,7 @@ class Mover {
        see if it's a valid location */
         return (((x) % 20 == 0) || ((y) % 20) == 0) && 20 <= x && x < 400 && 20 <= y && y < 400 && state[x / 20 - 1][y / 20 - 1];
     }
+
 }
 
 /* This is the pacman object */
@@ -79,6 +81,8 @@ class Player extends Mover {
     boolean stopped = false;
     boolean finished = false;
 
+	Point next_p;
+
     /* Constructor places pacman in initial location and orientation */
     public Player(int x, int y) {
         pelletsEaten = 0;
@@ -91,27 +95,35 @@ class Player extends Mover {
         finished = false;
         currDirection = 3;
         desiredDirection = 3;
+        next_p = new Point(x, y);
     }
+
+	public Point getPosition() {
+		return new Point(x, y);
+	}
 
     /* The move function moves the pacman for one frame in non demo mode */
     public void move() {
+    	++stableFCount;
+
         lastX = x;
         lastY = y;
 
         /* Try to turn in the direction input by the user */
         /*Can only turn if we're in center of a grid*/
         if (x % gridSize == 0 && y % gridSize == 0 || (desiredDirection + 2 % 4) == currDirection    ) {
-            moveInDirection(desiredDirection);
+            next_p = moveInDirection(desiredDirection);
+            x=next_p.x;
+            y=next_p.y;
         }
         /* If we haven't moved, then move in the direction the pacman was headed anyway */
-        if (lastX == x && lastY == y) {
-            moveInDirection(currDirection);
-        }
-
-        /* If we did change direction, update currDirection to reflect that */
-        else {
-            currDirection = desiredDirection;
-        }
+//        if (lastX == x && lastY == y) {
+//            moveInDirection(currDirection);
+//        }
+//        else {
+//			/* If we did change direction, update currDirection to reflect that */
+//            currDirection = desiredDirection;
+//        }
 
         /* If we didn't move at all, set the stopped flag */
         if (lastX == x && lastY == y)
@@ -124,25 +136,27 @@ class Player extends Mover {
         }
     }
 
-    private void moveInDirection(int currDirection) {
+    public Point moveInDirection(int currDirection) {
+    	Point nest_p = new Point(x, y);
         switch (currDirection) {
             case 0:
-                if (isValidDest(x, y - increment))
-                    y -= increment;
+                if (isValidDest(nest_p.x, nest_p.y - increment))
+					nest_p.y -= increment;
                 break;
             case 1:
-                if (isValidDest(x + gridSize, y))
-                    x += increment;
+                if (isValidDest(nest_p.x + gridSize, nest_p.y))
+					nest_p.x += increment;
                 break;
             case 2:
-                if (isValidDest(x, y + gridSize))
-                    y += increment;
+                if (isValidDest(nest_p.x, nest_p.y + gridSize))
+					nest_p.y += increment;
                 break;
             case 3:
-                if (isValidDest(x - increment, y))
-                    x -= increment;
+                if (isValidDest(nest_p.x - increment, nest_p.y))
+					nest_p.x -= increment;
                 break;
         }
+        return nest_p;
     }
 
     /* Update what pellet the pacman is on top of */
@@ -205,19 +219,31 @@ public class Board extends JPanel {
 
     /* This is the font used for the menus */
     Font font = new Font("Monospaced", Font.BOLD, 12);
+	private Point possible_next_point;
 
-    /* Constructor initializes state flags etc.*/
-    public Board() {
+	/* Constructor initializes state flags etc.*/
+    public Board(int boardSize) {
         initHighScores();
         sounds = new GameSounds();
         currScore = 0;
         stopped = false;
         max = 400;
-        gridSize = 20;
+        gridSize = boardSize;
         New = 0;
         titleScreen = true;
         traversedTiles = new boolean[gridSize][gridSize];
     }
+
+	public boolean[] getSurroundingArea(){
+		boolean[] result = new boolean[4];
+		Point player_pos = player.getPosition();
+		for(int i=0; i<4; ++i){
+			Point possible_next_point = player.moveInDirection(i);
+			// If pacman can go in chosen direction, possible_next_point will be different from current position
+			result[i]=!possible_next_point.equalsTo(player_pos);
+		}
+		return result;
+	}
 
     /* Reads the high scores file and saves it */
     public void initHighScores() {
@@ -256,20 +282,20 @@ public class Board extends JPanel {
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
                 state[i][j] = true;
-                pellets[i][j] = true;
+//                pellets[i][j] = true;
             }
         }
 
         /* Handle the weird spots with no pellets*/
-        for (int i = 5; i < 14; i++) {
-            for (int j = 5; j < 12; j++) {
-                pellets[i][j] = false;
-            }
-        }
-        pellets[9][7] = false;
-        pellets[8][8] = false;
-        pellets[9][8] = false;
-        pellets[10][8] = false;
+//        for (int i = 5; i < 14; i++) {
+//            for (int j = 5; j < 12; j++) {
+//                pellets[i][j] = false;
+//            }
+//        }
+//        pellets[9][7] = false;
+//        pellets[8][8] = false;
+//        pellets[9][8] = false;
+//        pellets[10][8] = false;
 
 
         //reset traversed

@@ -19,7 +19,7 @@ public class Sensor {
 
     private int calculatePacmanTile(int x,int y,int gridSize){
         int result = (x/gridSize * gridSize - gridSize) +  (y / gridSize - 1);
-        System.out.println("CURRENT PACMAN TILE IS: " + result);
+//        System.out.println("CURRENT PACMAN TILE IS: " + result);
         return result;
     }
 }
