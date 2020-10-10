@@ -6,8 +6,7 @@ public class Logic {
 	private int boardSize;
 	// planned_path contains planned path to the next vertex
 	LinkedList<Integer> planned_path = new LinkedList<>();
-	// list of directions from initial position
-	LinkedList<Integer> current_path = new LinkedList<>();
+	// position.path - list of directions from initial position
 	VertexPoint position;
 	Algorithm a;
 	public Logic(int boardSize, Point start_pos, Algorithm algorithm){
@@ -26,26 +25,24 @@ public class Logic {
 			if(!a.isFinished()){
 				VertexPoint next = (VertexPoint)a.getNextVertex();
 				planned_path = createPathTo(next);
-				int step = planned_path.pollFirst();
-				if(current_path.isEmpty()){
-					current_path.addLast(step);
-					return step;
-				}
-				//if next step is opposite to the last step, just remove last step from path
-				if((step+2)%4 == (int)(current_path.peekFirst())){
-					current_path.pollLast();
-				}
-				else current_path.addLast(step);
-				return step;
 			}
 			else{
 				System.out.println("We have a problem, this shouldn't happen");
 				return 0;
 			}
 		}
-		else{
-			return planned_path.pollFirst();
-		}
+			int step = planned_path.pollFirst();
+			position = moveInDirection(step);
+			if(position.path.isEmpty()){
+				position.path.addLast(step);
+				return step;
+			}
+			//if next step is opposite to the last step, just remove last step from path
+			if((step+2)%4 == (int)(position.path.peekFirst())){
+				position.path.pollLast();
+			}
+			else position.path.addLast(step);
+			return step;
 	}
 
 	private LinkedList<Integer> createPathTo(VertexPoint next) {
@@ -53,14 +50,14 @@ public class Logic {
 		// The simplest way to create path  - return back step by step
 		LinkedList<Integer> res_path = new LinkedList<>();
 		// Need to optimize later
-		int first_different_index = 0;
-		for(int i = 0; i<Math.min(current_path.size(), next.path.size()); ++i){
-				if(!current_path.get(i).equals(next.path.get(i))){
+		int first_different_index = Math.min(position.path.size(), next.path.size());
+		for(int i = 0; i<first_different_index; ++i){
+				if(position.path.get(i)!=next.path.get(i)){
 					first_different_index=i;
 					break;
 				}
 		}
-		for(int j=current_path.size()-1; j>=first_different_index; --j) res_path.addFirst((current_path.get(j)+2)%4);
+		for(int j=position.path.size()-1; j>=first_different_index; --j) res_path.addFirst((position.path.get(j)+2)%4);
 		for(int j=first_different_index; j<next.path.size();++j) res_path.addLast(next.path.get(j));
 		return res_path;
 	}
@@ -98,5 +95,13 @@ class VertexPoint extends Point{
 	public VertexPoint(Point p) {
 		super(p.x, p.y);
 		this.path = new LinkedList<>();
+	}
+	@Override
+	public String toString(){
+		return super.toString()+" path: "+path.toString();
+	}
+	@Override
+	public boolean equals(Object o){
+		return super.equals(o);
 	}
 }

@@ -400,7 +400,7 @@ public class Board extends JPanel {
 
         /* Delete the players and ghosts */
         g.setColor(Color.BLACK);
-        g.fillRect(player.lastX, player.lastY, 20, 20);
+        g.fillRect(player.last.x, player.last.x, 20, 20);
 
         /* Eat pellets */
         if (pellets[player.pelletX][player.pelletY] && New != 2 && New != 3) {
@@ -437,7 +437,7 @@ public class Board extends JPanel {
             sounds.nomNomStop();
         }
 
-        traversedTiles[(player.x)/gridSize][(player.y)/gridSize] = !player.finished;
+        traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
 //        System.out.println(player.finished);
         g.setColor(Color.ORANGE);
 
@@ -453,7 +453,7 @@ public class Board extends JPanel {
         /* Draw the pacman */
         if (player.frameCount < 5) {
             /* Draw mouth closed */
-            g.drawImage(pacmanImage, player.x, player.y, Color.BLACK, null);
+            g.drawImage(pacmanImage, player.current.x, player.current.y, Color.BLACK, null);
         } else {
             /* Draw mouth open in appropriate direction */
             if (player.frameCount >= 10)
@@ -461,16 +461,16 @@ public class Board extends JPanel {
 
             switch (player.currDirection) {
                 case 3:
-                    g.drawImage(pacmanLeftImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanLeftImage, player.current.x, player.current.y, Color.BLACK, null);
                     break;
                 case 1:
-                    g.drawImage(pacmanRightImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanRightImage, player.current.x, player.current.y, Color.BLACK, null);
                     break;
                 case 0:
-                    g.drawImage(pacmanUpImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanUpImage, player.current.x, player.current.y, Color.BLACK, null);
                     break;
                 case 2:
-                    g.drawImage(pacmanDownImage, player.x, player.y, Color.BLACK, null);
+                    g.drawImage(pacmanDownImage, player.current.x, player.current.y, Color.BLACK, null);
                     break;
             }
         }

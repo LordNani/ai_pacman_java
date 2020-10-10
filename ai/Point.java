@@ -14,12 +14,17 @@ public class Point implements Vertex {
 	}
 
 	@Override
-	public boolean equals(Vertex player_pos) {
+	public boolean equals(Object player_pos) {
 		return x==((Point)player_pos).x && y==((Point)player_pos).y;
 	}
 
 	@Override
 	public boolean isConnected(Vertex v) {
 		return ((Point)v).x==x || ((Point)v).y==y;
+	}
+
+	@Override
+	public String toString(){
+		return "{x: "+x+", y: "+y+"}";
 	}
 }

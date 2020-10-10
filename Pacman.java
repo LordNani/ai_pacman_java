@@ -20,7 +20,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
     int boardSize = 20;
 
 	/* framesPerMove defines how often pacman_logic should decide where to go */
-	int framesPerMove = 15;
+	int framesPerMove = 3;
 
     /* Create a new board */
     Board b = new Board(boardSize);
@@ -75,7 +75,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
     public void repaint() {
         b.repaint(0, 0, 600, 20);
         b.repaint(0, 420, 600, 40);
-        b.repaint(b.player.x - 20, b.player.y - 20, 80, 80);
+        b.repaint(b.player.current.x - 20, b.player.current.y - 20, 80, 80);
 
     }
 
@@ -129,8 +129,12 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
 
         /* If we have a normal game state, move all pieces and update pellet status */
         if (!New) {
-			if(b.player.stableFCount % framesPerMove == 0){
-				b.player.desiredDirection = logic.makeMove(b.getSurroundingArea());
+			if(b.player.stableFCount % framesPerMove == 0 && !b.player.inAction){
+				System.out.println("Move "+ b.player.stableFCount / framesPerMove);
+				b.player.inAction=true;
+				b.player.currDirection = logic.makeMove(b.getSurroundingArea());
+				b.player.desiredPoint = b.player.moveInDirection(b.player.currDirection);
+				b.player.inAction=false;
 			}
 
       /* The pacman player has two functions, demoMove if we're in demo mode and move if we're in
@@ -145,7 +149,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
                 b.New = 1;
                 System.out.println("!!!WIN!!!");
             }
-            b.player.finished = sensor.isOnFinish(b.player.x, b.player.y, b.gridSize);
+            b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
 
         }
 
@@ -155,10 +159,11 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             frameTimer.stop();
 
             /* Move all game elements back to starting positions and orientations */
-            b.player.currDirection = 3;
-            b.player.desiredDirection = 3;
-            b.player.x = 200;
-            b.player.y = 300;
+            b.player.current.x = 200;
+            b.player.current.y = 300;
+            b.player.currDirection=3;
+            b.player.desiredPoint = b.player.moveInDirection(3);
+
             b.player.finished = false;
             b.finishTile = sensor.getFinishLocation();
             /* Advance a frame to display main state*/
