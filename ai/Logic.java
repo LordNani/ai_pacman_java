@@ -9,6 +9,7 @@ public class Logic {
 	// position.path - list of directions from initial position
 	VertexPoint position;
 	Algorithm a;
+	
 	public Logic(int boardSize, Point start_pos, Algorithm algorithm){
 		this.boardSize = boardSize;
 		position = new VertexPoint(start_pos);
