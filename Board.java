@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 import java.util.*;
 import java.io.*;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 
 /* Both Player and Ghost inherit Mover.  Has generic functions relevant to both*/
 class Mover {
@@ -58,6 +61,7 @@ class Mover {
 /*This board class contains the player, ghosts, pellets, and most of the game logic.*/
 public class Board extends JPanel {
 
+    public Point plannedPoint;
     /* Initialize the images*/
     /* For NOT JAR file*/
     Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg");
@@ -305,15 +309,32 @@ public class Board extends JPanel {
         g.setColor(Color.GREEN);
         g.fillRect(gridSize + finishTile/ gridSize * gridSize,gridSize + finishTile % gridSize * gridSize  ,gridSize,gridSize);
 
-        for (int i = 0; i < state.length; i++) {
-            for (int j = 0; j < state.length; j++) {
-                System.out.print("[" + (!state[j][i] ? "#" : ".") + "]");
-            }
-            System.out.println();
-        }
+//        for (int i = 0; i < state.length; i++) {
+//            for (int j = 0; j < state.length; j++) {
+//                System.out.print("[" + (!state[j][i] ? "#" : ".") + "]");
+//            }
+//            System.out.println();
+//        }
     }
 
+    private void drawPlanned(Graphics g){
 
+        traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
+//        System.out.println(player.finished);
+        g.setColor(Color.ORANGE);
+
+        // Drawing traversed path
+        for(int i = 0; i < traversedTiles.length; i++)
+            for(int j = 0; j < traversedTiles.length; j++){
+                if(traversedTiles[i][j])
+                    g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
+
+            }
+
+        g.setColor(Color.RED);
+        if(nonNull(plannedPoint.x))
+            g.fillRect(plannedPoint.x*gridSize,plannedPoint.y*gridSize,gridSize,gridSize);
+    }
 
     /* This is the main function that draws one entire frame of the game */
     public void paint(Graphics g) {
@@ -368,23 +389,13 @@ public class Board extends JPanel {
             g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
             newGame =0;
         }
-
+        drawBoard(g);
         /* Delete the players and ghosts */
         g.setColor(Color.BLACK);
         g.fillRect(player.last.x, player.last.y, 20, 20);
 
 
-        traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
-//        System.out.println(player.finished);
-        g.setColor(Color.ORANGE);
-
-        // Drawing traversed path
-        for(int i = 0; i < traversedTiles.length; i++)
-            for(int j = 0; j < traversedTiles.length; j++){
-                if(traversedTiles[i][j])
-                    g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
-
-            }
+        drawPlanned(g);
 
 
         /* Draw the pacman */
