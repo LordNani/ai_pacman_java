@@ -141,7 +141,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 				b.player.desiredPoint = b.player.moveInDirection(b.player.currDirection);
 				b.player.inAction=false;
 				b.plannedPoint = logic.plannedPoint;
-                repaint();
+
             }
 
       /* The pacman player has two functions, demoMove if we're in demo mode and move if we're in

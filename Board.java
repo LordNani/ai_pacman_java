@@ -332,7 +332,7 @@ public class Board extends JPanel {
             }
 
         g.setColor(Color.RED);
-        if(nonNull(plannedPoint.x))
+        if(nonNull(plannedPoint))
             g.fillRect(plannedPoint.x*gridSize,plannedPoint.y*gridSize,gridSize,gridSize);
     }
 
