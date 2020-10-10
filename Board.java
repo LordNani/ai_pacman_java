@@ -62,7 +62,7 @@ class Mover {
 public class Board extends JPanel {
 
     public Point plannedPoint;
-    public ArrayList<Point> plannedPath;
+    public ArrayList<Point> plannedPath = new ArrayList<>();
     /* Initialize the images*/
     /* For NOT JAR file*/
     Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg");

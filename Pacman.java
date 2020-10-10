@@ -21,7 +21,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     int boardSize = 20;
 
     /* framesPerMove defines how often pacman_logic should decide where to go */
-    int framesPerMove = 3;
+    int framesPerMove = 7;
 
     /* Create a new board */
     Board b = new Board(boardSize);

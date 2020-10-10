@@ -53,17 +53,17 @@ public class Logic {
 
 	private ArrayList<Point> convertToPoints(LinkedList<Integer> planned_path) {
 		ArrayList<Point> result  = new ArrayList<>();
-		Point currentPoint = new Point(plannedPoint);
+		Point currentPoint = new Point(position);
 		for(int i = 0; i < planned_path.size(); i++){
 			switch (planned_path.get(i)){
 				case 0:
-					currentPoint.y +=1;
+					currentPoint.y -=1;
 					break;
 				case 1:
 					currentPoint.x +=1;
 					break;
 				case 2:
-					currentPoint.y -=1;
+					currentPoint.y +=1;
 					break;
 				case 3:
 					currentPoint.x -=1;
@@ -87,7 +87,7 @@ public class Logic {
 					break;
 				}
 		}
-		for(int j=position.path.size()-1; j>=first_different_index; --j) res_path.addFirst((position.path.get(j)+2)%4);
+		for(int j=first_different_index; j<position.path.size();++j) res_path.addFirst((position.path.get(j)+2)%4);
 		for(int j=first_different_index; j<next.path.size();++j) res_path.addLast(next.path.get(j));
 		return res_path;
 	}
