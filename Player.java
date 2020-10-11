@@ -5,19 +5,11 @@ public class Player extends Mover {
 	Point desiredPoint;
 	int currDirection;
 
-	/* Keeps track of pellets eaten to determine end of game */
-	int pelletsEaten;
-
 	/* Last location */
 	Point last;
 
 	/* Current location */
 	Point current;
-
-	/* Which pellet the pacman is on top of */
-	int pelletX;
-	int pelletY;
-
 
 	/* Stopped is set when the pacman is not moving or has been killed */
 	boolean stopped = false;
@@ -27,12 +19,21 @@ public class Player extends Mover {
 	/* Constructor places pacman in initial location and orientation */
 	public Player(int x, int y) {
 		finished = false;
-		pelletX = x / gridSize - 1;
-		pelletY = y / gridSize - 1;
 		this.current = new Point(x,y);
 		this.last = new Point(current);
 		currDirection = 3;
 		desiredPoint = current;
+	}
+
+	public void resetPlayer(int x, int y){
+		finished = false;
+		this.current = new Point(x,y);
+		this.last = new Point(current);
+		currDirection = 3;
+		desiredPoint = current;
+		frameCount = 0;
+		stableFCount=0;
+
 	}
 
 	public Point getPosition() {

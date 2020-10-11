@@ -13,6 +13,10 @@ public class Point implements Vertex {
 		this.y=position.y;
 	}
 
+	public Point() {
+
+	}
+
 	@Override
 	public boolean equals(Object player_pos) {
 		return x==((Point)player_pos).x && y==((Point)player_pos).y;

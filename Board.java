@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import java.util.*;
 import java.io.*;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 
@@ -26,13 +25,11 @@ class Mover {
        increment is the speed at which the object moves,
        1 increment per move() call */
     int gridSize = 20;
-    int max;
     int increment;
 
     /* Generic constructor */
     public Mover() {
         increment = 20;
-        max = 400;
         state = new boolean[gridSize -1][gridSize -1];
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
@@ -76,28 +73,18 @@ public class Board extends JPanel {
     /* Initialize the player and ghosts */
     Player player = new Player(200, 300);
 
-    /* Score information */
-    int currScore;
-    int highScore;
-
-    /* if the high scores have been cleared, we have to update the top of the screen to reflect that */
-    boolean clearHighScores = false;
-
     /*Contains the game map, passed to player and ghosts */
     boolean[][] state;
-
 
     /* Game dimensions */
     int gridSize;
     int offset = 20;
 
     boolean[][] traversedTiles;
-    int finishTile = 0;
+    Point finishTile = new Point();
 
     /* State flags*/
-    boolean stopped;
     boolean titleScreen;
-    boolean winScreen = false;
     int newGame;
 
     /* Used to call sound effects */
@@ -110,11 +97,7 @@ public class Board extends JPanel {
 	/* Constructor initializes state flags etc.*/
     public Board(int boardSize) {
 
-
-        initHighScores();
         sounds = new GameSounds();
-        currScore = 0;
-        stopped = false;
         gridSize = boardSize;
         newGame = 0;
         titleScreen = true;
@@ -132,55 +115,26 @@ public class Board extends JPanel {
 		return result;
 	}
 
-    /* Reads the high scores file and saves it */
-    public void initHighScores() {
-        File file = new File("highScores.txt");
-        Scanner sc;
-        try {
-            sc = new Scanner(file);
-            highScore = sc.nextInt();
-            sc.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-    /* Wipes the high scores file and sets flag to update it on screen */
-    public void clearHighScores() {
-        PrintWriter out;
-        try {
-            out = new PrintWriter("highScores.txt");
-            out.println("0");
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        highScore = 0;
-        clearHighScores = true;
-    }
-
     /* Reset occurs on a new game*/
     public void reset() {
         state = new boolean[gridSize - 1][gridSize - 1];
-
-
         /* Clear state and pellets arrays */
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
                 state[i][j] = true;
-//                pellets[i][j] = true;
             }
         }
-
         //reset traversed
         for (int i = 0; i < traversedTiles.length; i++) {
             for (int j = 0; j < traversedTiles.length; j++) {
                 traversedTiles[i][j] = false;
             }
         }
-    }
 
+        plannedPoint = new Point();
+        plannedPath = new ArrayList<>();
+        player.resetPlayer(200,300);
+    }
 
     /* Function is called during drawing of the map.
        Whenever the a portion of the map is covered up with a barrier,
@@ -195,8 +149,6 @@ public class Board extends JPanel {
             }
         }
     }
-
-
 
     /*  This function draws the board.  The pacman board is really complicated and can only feasibly be done
         manually.  Whenever I draw a wall, I call updateMap to invalidate those coordinates.  This way the pacman
@@ -307,17 +259,15 @@ public class Board extends JPanel {
         updateMap(120, 320, 20, 60);
 
         g.setColor(Color.GREEN);
-        g.fillRect(gridSize + finishTile/ gridSize * gridSize,gridSize + finishTile % gridSize * gridSize  ,gridSize,gridSize);
+        g.fillRect(gridSize + finishTile.x,gridSize + finishTile.y  ,gridSize,gridSize);
 
-//        for (int i = 0; i < state.length; i++) {
-//            for (int j = 0; j < state.length; j++) {
-//                System.out.print("[" + (!state[j][i] ? "#" : ".") + "]");
-//            }
-//            System.out.println();
-//        }
+
     }
 
     private void drawPlanned(Graphics g){
+        /* Delete the players  */
+        g.setColor(Color.BLACK);
+        g.fillRect(player.last.x, player.last.y, 20, 20);
 
         traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
         g.setColor(Color.ORANGE);
@@ -338,8 +288,7 @@ public class Board extends JPanel {
 
         g.setColor(Color.RED);
         if(nonNull(plannedPoint)) {
-            System.out.println("IN BOARD " + plannedPoint.toString());
-
+//            System.out.println("IN BOARD " + plannedPoint.toString());
             g.fillRect(plannedPoint.x * gridSize + offset, plannedPoint.y * gridSize + offset, gridSize, gridSize);
         }
     }
@@ -359,60 +308,25 @@ public class Board extends JPanel {
             return;
         }
 
-        /* If this is the win screen, draw the win screen and return */
-        else if (winScreen) {
-            g.setColor(Color.BLACK);
-            g.fillRect(0, 0, 600, 600);
-            g.drawImage(winScreenImage, 0, 0, Color.BLACK, null);
-            newGame = 1;
-            /* Stop any pacman eating sounds */
-            sounds.nomNomStop();
-            return;
-        }
-
-        /* If need to update the high scores, redraw the top menu bar */
-        if (clearHighScores) {
-            g.setColor(Color.BLACK);
-            g.fillRect(0, 0, 600, 18);
-            g.setColor(Color.YELLOW);
-            g.setFont(font);
-            clearHighScores = false;
-            g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
-        }
 
         /* Game initialization */
         if (newGame == 1) {
             reset();
-            player = new Player(200, 300);
-            currScore = 0;
             drawBoard(g);
             /* Send the game map to player and all ghosts */
             player.updateState(state);
-            /* Don't let the player go in the ghost box*/
-            player.state[9][7] = false;
-
-            /* Draw the top menu bar*/
-            g.setColor(Color.YELLOW);
-            g.setFont(font);
-            g.drawString("Score: " + (currScore) + "\t High Score: " + highScore, 20, 10);
-            newGame =0;
         }
+
         drawBoard(g);
-        /* Delete the players and ghosts */
-        g.setColor(Color.BLACK);
-        g.fillRect(player.last.x, player.last.y, 20, 20);
-
-
         drawPlanned(g);
 
-
         /* Draw the pacman */
-        if (player.frameCount < 5) {
+        if (player.frameCount < 1) {
             /* Draw mouth closed */
             g.drawImage(pacmanImage, player.current.x, player.current.y, Color.BLACK, null);
         } else {
             /* Draw mouth open in appropriate direction */
-            if (player.frameCount >= 10)
+            if (player.frameCount >= 3)
                 player.frameCount = 0;
 
             switch (player.currDirection) {
