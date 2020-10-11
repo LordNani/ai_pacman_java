@@ -2,24 +2,20 @@ package ai;
 import java.util.Random;
 
 public class Sensor {
-    int finishTile = 0;
-    int[] possibleFinishLocations = {0};
-    public Sensor(){
+    Point finishPoint = new Point();
+    Point[] possibleFinishLocations = {new Point(0,0),new Point(160,160),new Point(300,0)};
+    public Sensor(int gridSize){
         Random rnd = new Random(System.currentTimeMillis());
-        finishTile = possibleFinishLocations[rnd.nextInt( possibleFinishLocations.length)];
-        System.out.println("Finish Tile is " + finishTile + ", or " + finishTile/20 + " " + finishTile % 20);
+        finishPoint = possibleFinishLocations[rnd.nextInt( possibleFinishLocations.length)];
+        System.out.println();
+        System.out.println("Finish Tile is " + finishPoint.toString());
     }
 
-    public int getFinishLocation() {return finishTile;};
+    public Point getFinishLocation() {return finishPoint;};
 
-    public boolean isOnFinish(int pacmanX, int pacmanY, int gridSize){
-
-        return calculatePacmanTile(pacmanX,pacmanY, gridSize) == finishTile;
+    public boolean isOnFinish(int x, int y, int gs){
+        Point pacmanPoint = new Point(x-gs,y-gs);
+        return pacmanPoint.equals(finishPoint);
     }
 
-    private int calculatePacmanTile(int x,int y,int gridSize){
-        int result = (x/gridSize * gridSize - gridSize) +  (y / gridSize - 1);
-        System.out.println("CURRENT PACMAN TILE IS: " + result);
-        return result;
-    }
 }

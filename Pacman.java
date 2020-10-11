@@ -1,35 +1,52 @@
 /* Drew Schuster */
 
+import ai.BFSAlgorithm;
+import ai.DFSAlgorithm;
+import ai.Logic;
 import ai.Sensor;
 
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.JApplet;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.*;
+import java.text.NumberFormat;
+import java.util.Scanner;
 
 /* This class contains the entire game... most of the game logic is in the Board class but this
    creates the gui and captures mouse and keyboard input, as well as controls the game states */
-public class Pacman extends JApplet implements MouseListener, KeyListener {
+public class Pacman extends JFrame implements MouseListener, KeyListener {
 
     /* These timers are used to kill title, game over, and victory screens after a set idle period (5 seconds)*/
     long titleTimer = -1;
     long timer = -1;
+    int frameFreq = 5;
+    int boardSize = 20;
+
+    /* framesPerMove defines how often pacman_logic should decide where to go */
+    int framesPerMove = 1;
 
     /* Create a new board */
-    Board b = new Board();
-    Sensor sensor = new Sensor();
+    Board b = new Board(boardSize);
+    Sensor sensor;
+    boolean isDFS = true;
+    Logic logic = new Logic(boardSize - 1, b.player.getGridPosition(),
+            new DFSAlgorithm(b.player.getGridPosition()));
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
 
 
     /* This constructor creates the entire game essentially */
     public Pacman() {
+
         b.requestFocus();
 
         /* Create and set up window frame*/
         JFrame f = new JFrame();
-        f.setSize(420, 460);
+        f.setSize(440, 460);
 
         /* Add the board to the frame */
         f.add(b, BorderLayout.CENTER);
@@ -43,21 +60,17 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
         f.setResizable(false);
 
         /* Set the New flag to 1 because this is a new game */
-        b.New = 1;
-
-        /* Manually call the first frameStep to initialize the game. */
-        stepFrame(true);
-
+        b.newGame = 1;
+        stepFrame();
         /* Create a timer that calls stepFrame every 30 milliseconds */
-        frameTimer = new javax.swing.Timer(30, new ActionListener() {
+        frameTimer = new javax.swing.Timer(frameFreq, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                stepFrame(false);
+                stepFrame();
             }
         });
 
         /* Start the timer */
         frameTimer.start();
-
 
         b.requestFocus();
     }
@@ -68,98 +81,94 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
     public void repaint() {
         b.repaint(0, 0, 600, 20);
         b.repaint(0, 420, 600, 40);
-        b.repaint(b.player.x - 20, b.player.y - 20, 80, 80);
+        b.repaint(b.player.current.x - boardSize, b.player.current.y - boardSize, boardSize * 4, boardSize * 4);
 
     }
 
     /* Steps the screen forward one frame */
-    public void stepFrame(boolean New) {
+    public void stepFrame() {
         /* If we aren't on a special screen than the timers can be set to -1 to disable them */
-        if (!b.titleScreen && !b.winScreen && !b.overScreen) {
+        if (!b.titleScreen) {
             timer = -1;
             titleTimer = -1;
         }
-
-
-    /* New can either be specified by the New parameter in stepFrame function call or by the state
-       of b.New.  Update New accordingly */
-        New = New || (b.New != 0);
-
-    /* If this is the title screen, make sure to only stay on the title screen for 5 seconds.
-       If after 5 seconds the user hasn't started a game, start up demo mode */
+        /* If this is the title screen, make sure to only stay on the title screen for 5 seconds.
+           If after 5 seconds the user hasn't started a game, start up demo mode */
         if (b.titleScreen) {
             if (titleTimer == -1) {
                 titleTimer = System.currentTimeMillis();
             }
 
-            long currTime = System.currentTimeMillis();
-            if (currTime - titleTimer >= 5000) {
+            if (System.currentTimeMillis() - titleTimer >= 1000) {
                 b.titleScreen = false;
                 titleTimer = -1;
             }
-            b.repaint();
+            repaint();
             return;
         }
- 
-    /* If this is the win screen or game over screen, make sure to only stay on the screen for 5 seconds.
-       If after 5 seconds the user hasn't pressed a key, go to title screen */
-        else if (b.winScreen || b.overScreen) {
-            if (timer == -1) {
-                timer = System.currentTimeMillis();
-            }
-
-            long currTime = System.currentTimeMillis();
-            if (currTime - timer >= 5000) {
-                b.winScreen = false;
-                b.overScreen = false;
-                b.titleScreen = true;
-                timer = -1;
-            }
-            b.repaint();
-            return;
-        }
-
 
         /* If we have a normal game state, move all pieces and update pellet status */
-        if (!New) {
-      /* The pacman player has two functions, demoMove if we're in demo mode and move if we're in
-         user playable mode.  Call the appropriate one here */
-            b.player.move();
-            /* Also move the ghosts, and update the pellet states */
-            b.player.updatePellet();
-
-//            System.out.println(b.player.x + ":" + b.player.y);
-//            b.player.finished = false;
-            if(b.player.finished){
-                b.New = 1;
-                System.out.println("!!!WIN!!!");
+        if (b.newGame == 0) {
+            if (b.player.stableFCount % framesPerMove == 0 && !b.player.inAction) {
+//                System.out.println("Move " + b.player.stableFCount / framesPerMove);
+                b.player.inAction = true;
+                b.player.currDirection = logic.makeMove(b.getSurroundingArea());
+                b.player.desiredPoint = b.player.moveInDirection(b.player.currDirection);
+                b.player.inAction = false;
+                b.plannedPoint = logic.plannedPoint;
+                b.plannedPath = logic.convertedPath;
             }
-            b.player.finished = sensor.isOnFinish(b.player.x, b.player.y, b.gridSize);
+            b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
 
-        }
+            if (b.player.finished) {
+                File file = new File("logs.txt");
 
-        /* We either have a new game or the user has died, either way we have to reset the board */
-        if (b.stopped || New) {
+                try {
+                    StringBuffer sb = new StringBuffer();
+                    BufferedWriter bf = new BufferedWriter(new FileWriter(file, true));
+                    String title = !isDFS ? "\n=======DFS TEST RESULT=======\n" : "\n=======BFS TEST RESULT=======\n";
+                    sb.append(title);
+                    sb.append("Average RAM: " + Logic.averageRAM + "MB\n");
+                    sb.append("Steps: " + b.player.stableFCount / framesPerMove + "\n");
+                    sb.append("Time: " + b.player.stableFCount * frameFreq + " milliseconds\n");
+                    System.out.println(sb);
+                    bf.append(sb);
+                    bf.close();
+
+                    Logic.averageRAM = 0;
+                    Logic.ramCounter = 0;
+                    b.player.stableFCount = 0;
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                b.newGame = 1;
+//                System.out.println("!!!WIN!!!");
+            }
+            b.player.move();
+
+
+        } else {
+            /* We either have a new game or the user has died, either way we have to reset the board */
             /*Temporarily stop advancing frames */
             frameTimer.stop();
-
-            /* Move all game elements back to starting positions and orientations */
-            b.player.currDirection = 3;
-            b.player.desiredDirection = 3;
-            b.player.x = 200;
-            b.player.y = 300;
-            b.player.finished = false;
+            sensor = new Sensor(boardSize);
             b.finishTile = sensor.getFinishLocation();
             /* Advance a frame to display main state*/
-            b.repaint(0, 0, 600, 600);
-            /*Start advancing frames once again*/
-            b.stopped = false;
+            repaint(0, 0, 600, 600);
+            //Change algorithm on every game restart
+            logic = isDFS ? new Logic(boardSize - 1, b.player.getGridPosition(),
+                    new DFSAlgorithm(b.player.getGridPosition())) : new Logic(boardSize - 1, b.player.getGridPosition(),
+                    new BFSAlgorithm(b.player.getGridPosition()));
+            ;
+            isDFS = !isDFS;
+
+            b.newGame = 0;
             frameTimer.start();
         }
-        /* Otherwise we're in a normal state, advance one frame*/
-        else {
-            repaint();
-        }
+
+
+        repaint();
+
     }
 
     /* Handles user key presses*/
@@ -169,57 +178,14 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
             b.titleScreen = false;
             return;
         }
-        /* Pressing a key in the win screen or game over screen goes to the title screen */
-        else if (b.winScreen || b.overScreen) {
-            b.titleScreen = true;
-            b.winScreen = false;
-            b.overScreen = false;
-            return;
-        }
-        /* Pressing a key during a demo kills the demo mode and starts a new game */
 
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+            System.exit(0);
 
-        /* Otherwise, key presses control the player! */
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                b.player.desiredDirection = 3;
-                break;
-            case KeyEvent.VK_RIGHT:
-                b.player.desiredDirection = 1;
-                break;
-            case KeyEvent.VK_UP:
-                b.player.desiredDirection = 0;
-                break;
-            case KeyEvent.VK_DOWN:
-                b.player.desiredDirection = 2;
-                break;
-        }
-
-        repaint();
     }
 
     /* This function detects user clicks on the menu items on the bottom of the screen */
     public void mousePressed(MouseEvent e) {
-        if (b.titleScreen || b.winScreen || b.overScreen) {
-            /* If we aren't in the game where a menu is showing, ignore clicks */
-            return;
-        }
-
-        /* Get coordinates of click */
-        int x = e.getX();
-        int y = e.getY();
-        if (400 <= y && y <= 460) {
-            if (100 <= x && x <= 150) {
-                /* New game has been clicked */
-                b.New = 1;
-            } else if (180 <= x && x <= 300) {
-                /* Clear high scores has been clicked */
-                b.clearHighScores();
-            } else if (350 <= x && x <= 420) {
-                /* Exit has been clicked */
-                System.exit(0);
-            }
-        }
     }
 
 
@@ -241,8 +207,11 @@ public class Pacman extends JApplet implements MouseListener, KeyListener {
     public void keyTyped(KeyEvent e) {
     }
 
+
     /* Main function simply creates a new pacman instance*/
     public static void main(String[] args) {
-        Pacman c = new Pacman();
+
+        new Pacman().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }
 }
