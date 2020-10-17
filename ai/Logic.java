@@ -21,7 +21,6 @@ public class Logic {
     }
 
     public int makeMove(boolean[] surroundingArea) {
-
         calcRAMUsage();
         for (int i = 0; i < surroundingArea.length; ++i) {
             if (surroundingArea[i]) {
@@ -30,11 +29,7 @@ public class Logic {
         }
         if (planned_path.isEmpty()) {
             if (!a.isFinished()) {
-                VertexPoint next = (VertexPoint) a.getNextVertex();
-                plannedPoint = new Point(next);
-//				System.out.println("planned " + plannedPoint.toString());
-                planned_path = createPathTo(next);
-                convertedPath = convertToPoints(planned_path);
+                getNextPoint();
             } else {
                 System.out.println("We have a problem, this shouldn't happen");
                 return 0;
@@ -52,6 +47,17 @@ public class Logic {
             }
         }
         return step;
+    }
+
+    private void getNextPoint() {
+        if(a instanceof AwareAlgorithm){
+            System.out.println("aware");
+            ((AwareAlgorithm) a).updatePosition(position);
+        }
+        VertexPoint next = (VertexPoint) a.getNextVertex();
+        plannedPoint = new Point(next);
+        planned_path = createPathTo(next);
+        convertedPath = convertToPoints(planned_path);
     }
 
     private ArrayList<Point> convertToPoints(LinkedList<Integer> planned_path) {
@@ -134,31 +140,3 @@ public class Logic {
     }
 }
 
-class VertexPoint extends Point {
-    LinkedList<Integer> path;
-
-    public VertexPoint(int x, int y, LinkedList<Integer> path) {
-        super(x, y);
-        this.path = path;
-    }
-
-    public VertexPoint(VertexPoint vp) {
-        super(vp.x, vp.y);
-        this.path = ((LinkedList<Integer>) vp.path.clone());
-    }
-
-    public VertexPoint(Point p) {
-        super(p.x, p.y);
-        this.path = new LinkedList<>();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + " path: " + path.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-}

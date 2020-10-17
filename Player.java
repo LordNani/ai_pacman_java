@@ -1,4 +1,5 @@
 import ai.Point;
+import ai.VertexPoint;
 
 public class Player extends Mover {
 	/* Direction is used in demoMode, currDirection and desiredDirection are used in non demoMode*/
@@ -41,7 +42,7 @@ public class Player extends Mover {
 	}
 
 	public Point getGridPosition() {
-		return new Point(current.x/gridSize-1, current.y/gridSize-1);
+		return toGridFormat(current);
 	}
 
 	/* The move function moves the pacman for one frame in non demo mode */
@@ -96,4 +97,7 @@ public class Player extends Mover {
 	}
 
 
+	public Point toGridFormat(Point point) {
+		return new Point(point.x/gridSize-1, point.y/gridSize-1);
+	}
 }

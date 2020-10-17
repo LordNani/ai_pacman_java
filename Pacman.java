@@ -1,9 +1,6 @@
 /* Drew Schuster */
 
-import ai.BFSAlgorithm;
-import ai.DFSAlgorithm;
-import ai.Logic;
-import ai.Sensor;
+import ai.*;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -23,9 +20,10 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     /* These timers are used to kill title, game over, and victory screens after a set idle period (5 seconds)*/
     long titleTimer = -1;
     long timer = -1;
-    int frameFreq = 5;
+    int frameFreq = 15;
     int boardSize = 20;
-
+    enum algoritmType {DFS, BFS, Greedy, AStar}
+    int currentAlgoritm=0;
     /* framesPerMove defines how often pacman_logic should decide where to go */
     int framesPerMove = 1;
 
@@ -33,8 +31,8 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     Board b = new Board(boardSize);
     Sensor sensor;
     boolean isDFS = true;
-    Logic logic = new Logic(boardSize - 1, b.player.getGridPosition(),
-            new DFSAlgorithm(b.player.getGridPosition()));
+
+    Logic logic ;
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
 
@@ -156,10 +154,25 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             /* Advance a frame to display main state*/
             repaint(0, 0, 600, 600);
             //Change algorithm on every game restart
-            logic = isDFS ? new Logic(boardSize - 1, b.player.getGridPosition(),
-                    new DFSAlgorithm(b.player.getGridPosition())) : new Logic(boardSize - 1, b.player.getGridPosition(),
-                    new BFSAlgorithm(b.player.getGridPosition()));
-            ;
+            Algorithm algorithm;
+            switch(currentAlgoritm){
+                case 0: algorithm = new DFSAlgorithm(b.player.getGridPosition()); break;
+                case 1: algorithm = new BFSAlgorithm(b.player.getGridPosition()); break;
+                case 2: algorithm = new GreedyAlgorithm(
+                        new VertexPoint(b.player.getGridPosition()),
+                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
+                ); break;
+                default: algorithm = new AStarAlgorithm(
+                        new VertexPoint(b.player.getGridPosition()),
+                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
+                ); break;
+            }
+            currentAlgoritm=(currentAlgoritm+1)%4;
+            logic = new Logic(boardSize-1, b.player.getGridPosition(),algorithm);
+//            logic = isDFS ? new Logic(boardSize - 1, b.player.getGridPosition(),
+//                    new DFSAlgorithm(b.player.getGridPosition())) : new Logic(boardSize - 1, b.player.getGridPosition(),
+//                    new BFSAlgorithm(b.player.getGridPosition()));
+//            ;
             isDFS = !isDFS;
 
             b.newGame = 0;
