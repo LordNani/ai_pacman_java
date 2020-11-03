@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class MinMaxTree {
+public abstract class MinMaxTree {
 	MinMaxVertex root;
 	MapGraph mapGraph;
 	int depth;
@@ -40,4 +40,5 @@ public class MinMaxTree {
 		enemy_move.setChildren(result);
 		return result;
 	}
+
 }
