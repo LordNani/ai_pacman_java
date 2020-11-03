@@ -5,7 +5,7 @@ import ai.Point;
 import java.util.HashMap;
 
 public class MapGraph {
-	MapTile[][] tiles;
+	public MapTile[][] tiles;
 
 	public MapGraph(boolean[][] state){
 		tiles = new MapTile[state.length][state[0].length];
