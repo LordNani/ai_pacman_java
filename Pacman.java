@@ -36,7 +36,6 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
 
-
     /* This constructor creates the entire game essentially */
     public Pacman() {
 
