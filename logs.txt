@@ -1298,3 +1298,48 @@ Time: 435 milliseconds
 Average RAM: 13.9305MB
 Steps: 183
 Time: 2745 milliseconds
+
+=======DFS TEST RESULT=======
+Average RAM: 9.9924MB
+Steps: 232
+Time: 3480 milliseconds
+
+=======BFS TEST RESULT=======
+Average RAM: 9.8917MB
+Steps: 2040
+Time: 30600 milliseconds
+
+=======DFS TEST RESULT=======
+Average RAM: 9.9008MB
+Steps: 24
+Time: 360 milliseconds
+
+=======BFS TEST RESULT=======
+Average RAM: 10.0835MB
+Steps: 29
+Time: 435 milliseconds
+
+=======DFS TEST RESULT=======
+Average RAM: 10.8311MB
+Steps: 183
+Time: 2745 milliseconds
+
+=======BFS TEST RESULT=======
+Average RAM: 11.8239MB
+Steps: 2613
+Time: 39195 milliseconds
+
+=======DFS TEST RESULT=======
+Average RAM: 10.0723MB
+Steps: 29
+Time: 435 milliseconds
+
+=======BFS TEST RESULT=======
+Average RAM: 10.0723MB
+Steps: 29
+Time: 435 milliseconds
+
+=======DFS TEST RESULT=======
+Average RAM: 10.4795MB
+Steps: 113
+Time: 1695 milliseconds

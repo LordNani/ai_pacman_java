@@ -1,5 +1,6 @@
+package main;
+
 import ai.Point;
-import ai.VertexPoint;
 
 public class Player extends Mover {
 	/* Direction is used in demoMode, currDirection and desiredDirection are used in non demoMode*/

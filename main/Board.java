@@ -1,4 +1,4 @@
-/* Drew Schuster */
+package main;/* Drew Schuster */
 
 import ai.Point;
 
@@ -6,12 +6,11 @@ import java.awt.*;
 
 import javax.swing.JPanel;
 import java.util.*;
-import java.io.*;
 
 import static java.util.Objects.nonNull;
 
 
-/* Both Player and Ghost inherit Mover.  Has generic functions relevant to both*/
+/* Both main.Player and Ghost inherit main.Mover.  Has generic functions relevant to both*/
 class Mover {
     /* Framecount is used to count animation frames*/
     public int frameCount = 0;
@@ -74,7 +73,7 @@ public class Board extends JPanel {
     Player player = new Player(200, 300);
 
     /*Contains the game map, passed to player and ghosts */
-    boolean[][] state;
+    public boolean[][] state;
 
     /* Game dimensions */
     int gridSize;

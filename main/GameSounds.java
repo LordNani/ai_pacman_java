@@ -1,4 +1,4 @@
-/* Drew Schuster */
+package main;/* Drew Schuster */
 
 import java.net.URL;
 import javax.sound.sampled.*;
@@ -21,7 +21,7 @@ public class GameSounds{
         AudioInputStream audioIn;
         
         try{
-            // Pacman eating sound
+            // main.Pacman eating sound
             url = this.getClass().getClassLoader().getResource("sounds/nomnom.wav");
             audioIn = AudioSystem.getAudioInputStream(url);
             nomNom = AudioSystem.getClip();

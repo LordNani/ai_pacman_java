@@ -1,19 +1,17 @@
-/* Drew Schuster */
+package main;/* Drew Schuster */
 
 import ai.*;
+import ai.minmax.MapGraph;
 
 import javax.swing.*;
 import java.awt.event.*;
-import javax.swing.JApplet;
 import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.*;
-import java.text.NumberFormat;
-import java.util.Scanner;
 
-/* This class contains the entire game... most of the game logic is in the Board class but this
+/* This class contains the entire game... most of the game logic is in the main.Board class but this
    creates the gui and captures mouse and keyboard input, as well as controls the game states */
 public class Pacman extends JFrame implements MouseListener, KeyListener {
 
@@ -173,6 +171,8 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 //                    new BFSAlgorithm(b.player.getGridPosition()));
 //            ;
             isDFS = !isDFS;
+
+            MapGraph mapGraph = new MapGraph(b.state);
 
             b.newGame = 0;
             frameTimer.start();
