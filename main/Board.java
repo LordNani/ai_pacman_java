@@ -347,4 +347,19 @@ public class Board extends JPanel {
 
 
     }
+
+    public Player[] getGhosts() {
+        return new Player[]{player};
+    }
+
+    public Player getPacman() {
+        return player;
+    }
+
+    public ArrayList<Point> getTargets() {
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(0,0));
+        points.add(new Point(0,1));
+        return points;
+    }
 }
