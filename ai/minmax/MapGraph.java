@@ -21,7 +21,7 @@ public class MapGraph {
 						}
 						if (j != 0 && state[i][j-1]) {
 							MapTile left_tile = tiles[i][j - 1];
-							tile.neighbours[3] = tile;
+							tile.neighbours[3] = left_tile;
 							left_tile.neighbours[1] = tile;
 						}
 						tiles[i][j] = tile;

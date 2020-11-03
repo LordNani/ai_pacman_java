@@ -56,4 +56,15 @@ public class MinMaxVertex implements Cloneable{
 	public void setFather(MinMaxVertex father) {
 		this.father = father;
 	}
+
+	@Override
+	public String toString(){
+		int length = 0;
+		MinMaxVertex c_father = getFather();
+		while(c_father!=null){
+			c_father = c_father.getFather();
+			++length;
+		}
+		return ((max) ? "Ghost " : "Pacman ")+location.point.toString()+" length: "+length;
+	}
 }
