@@ -1343,3 +1343,8 @@ Time: 435 milliseconds
 Average RAM: 10.4795MB
 Steps: 113
 Time: 1695 milliseconds
+
+=======DFS TEST RESULT=======
+Average RAM: 10.0063MB
+Steps: 232
+Time: 3480 milliseconds

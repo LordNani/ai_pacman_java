@@ -3,6 +3,8 @@ package main;/* Drew Schuster */
 import ai.*;
 import ai.minmax.MapGraph;
 import ai.minmax.MinMaxTree;
+import ai.minmax.PacmanLogic;
+import ai.minmax.PacmanMinMaxTree;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -173,8 +175,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 //            ;
             isDFS = !isDFS;
 
-            MapGraph mapGraph = new MapGraph(b.state);
-            MinMaxTree tree = new MinMaxTree(mapGraph, 5, mapGraph.tiles[0][0], mapGraph.tiles[0][2]);
+            PacmanLogic pacmanLogic = new PacmanLogic(b.player, b);
 
             b.newGame = 0;
             frameTimer.start();

@@ -21,11 +21,11 @@ public abstract class MinMaxTree {
 		for(int i=0; i<depth; ++i){
 			moves.clear();
 			for(MinMaxVertex enemy_move : enemy_moves){
-				moves.addAll(addChildrenByFather(enemy_move, false));
+				if(!enemy_move.isEvaluated()) moves.addAll(addChildrenByFather(enemy_move, false));
 			}
 			enemy_moves.clear();
 			for(MinMaxVertex move : moves){
-				enemy_moves.addAll(addChildrenByFather(move, true));
+				if(!move.isEvaluated()) enemy_moves.addAll(addChildrenByFather(move, true));
 			}
 		}
 	}
@@ -35,10 +35,56 @@ public abstract class MinMaxTree {
 		MapTile location_of_previous = (enemy_move.getFather().getFather()!=null && enemy_move.getFather().getFather().getFather()!=null) ?
 				enemy_move.getFather().getFather().getFather().getLocation() : null;
 		for(MapTile neighbour_of_father : enemy_move.getFather().getLocation().neighbours){
-			if(neighbour_of_father!=null && !neighbour_of_father.equals(location_of_previous)) result.add(new MinMaxVertex(max, enemy_move, null, neighbour_of_father));
+			if(neighbour_of_father!=null && !neighbour_of_father.equals(location_of_previous)) {
+				MinMaxVertex new_vertex = new MinMaxVertex(max, enemy_move, null, neighbour_of_father);
+				result.add(new_vertex);
+				if(neighbour_of_father.equals(enemy_move.getLocation())) new_vertex.setValue(getCollisionValue());
+			}
 		}
 		enemy_move.setChildren(result);
 		return result;
 	}
+
+	MapTile getBest(){
+		evaluate(root);
+		return getMaxVertex(root.getChildren()).getLocation();
+	}
+
+	private double evaluate(MinMaxVertex vertex) {
+		if(vertex.isEvaluated()) return vertex.getValue();
+		if(vertex.getChildren()==null || vertex.getChildren().isEmpty()) return evaluateSituation();
+		for(MinMaxVertex child : vertex.getChildren())
+			child.setValue(evaluate(child));
+		if(vertex.isMax()) return getMaxVertex(vertex.getChildren()).getValue();
+		else return getMinVertex(vertex.getChildren()).getValue();
+	}
+
+	private MinMaxVertex getMinVertex(ArrayList<MinMaxVertex> children) {
+		MinMaxVertex best_vertex = null;
+		double min = Double.MAX_VALUE;
+		for(MinMaxVertex v : children){
+			if(min > v.getValue()){
+				min = v.getValue();
+				best_vertex = v;
+			}
+		}
+		return best_vertex;
+	}
+
+	private MinMaxVertex getMaxVertex(ArrayList<MinMaxVertex> children) {
+		MinMaxVertex best_vertex = null;
+		double max = Double.MIN_VALUE;
+		for(MinMaxVertex v : children){
+			if(max<v.getValue()){
+				max = v.getValue();
+				best_vertex = v;
+			}
+		}
+		return best_vertex;
+	}
+
+	protected abstract double getCollisionValue();
+
+	protected abstract double evaluateSituation();
 
 }
