@@ -17,7 +17,7 @@ public class Player extends Mover {
 	boolean stopped = false;
 	boolean finished = false;
 	public boolean inAction=false;
-
+	int collectedPellets = 0;
 	/* Constructor places pacman in initial location and orientation */
 	public Player(int x, int y) {
 		finished = false;
@@ -35,7 +35,7 @@ public class Player extends Mover {
 		desiredPoint = current;
 		frameCount = 0;
 		stableFCount=0;
-
+		collectedPellets = 0;
 	}
 
 	public Point getPosition() {

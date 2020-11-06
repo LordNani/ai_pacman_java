@@ -19,12 +19,12 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     /* These timers are used to kill title, game over, and victory screens after a set idle period (5 seconds)*/
     long titleTimer = -1;
     long timer = -1;
-    int frameFreq = 15;
+    int frameFreq = 30;
     int boardSize = 20;
     enum algoritmType {DFS, BFS, Greedy, AStar}
     int currentAlgoritm=0;
     /* framesPerMove defines how often pacman_logic should decide where to go */
-    int framesPerMove = 1;
+    int framesPerMove = 5;
 
     /* Create a new board */
     Board b = new Board(boardSize);
@@ -117,26 +117,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
 
             if (b.player.finished) {
-                File file = new File("logs.txt");
-
-                try {
-                    StringBuffer sb = new StringBuffer();
-                    BufferedWriter bf = new BufferedWriter(new FileWriter(file, true));
-                    String title = !isDFS ? "\n=======DFS TEST RESULT=======\n" : "\n=======BFS TEST RESULT=======\n";
-                    sb.append(title);
-                    sb.append("Average RAM: " + Logic.averageRAM + "MB\n");
-                    sb.append("Steps: " + b.player.stableFCount / framesPerMove + "\n");
-                    sb.append("Time: " + b.player.stableFCount * frameFreq + " milliseconds\n");
-                    System.out.println(sb);
-                    bf.append(sb);
-                    bf.close();
-
-                    Logic.averageRAM = 0;
-                    Logic.ramCounter = 0;
-                    b.player.stableFCount = 0;
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
+                saveResults();
                 b.newGame = 1;
 //                System.out.println("!!!WIN!!!");
             }
@@ -174,7 +155,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             isDFS = !isDFS;
 
             MapGraph mapGraph = new MapGraph(b.state);
-            MinMaxTree tree = new MinMaxTree(mapGraph, 5, mapGraph.tiles[0][0], mapGraph.tiles[0][2]);
+//            MinMaxTree tree = new MinMaxTree(mapGraph, 5, mapGraph.tiles[0][0], mapGraph.tiles[0][2]);
 
             b.newGame = 0;
             frameTimer.start();
@@ -183,6 +164,29 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
         repaint();
 
+    }
+
+    private void saveResults(){
+        File file = new File("logs.txt");
+
+        try {
+            StringBuffer sb = new StringBuffer();
+            BufferedWriter bf = new BufferedWriter(new FileWriter(file, true));
+            String title = !isDFS ? "\n=======DFS TEST RESULT=======\n" : "\n=======BFS TEST RESULT=======\n";
+            sb.append(title);
+            sb.append("Average RAM: " + Logic.averageRAM + "MB\n");
+            sb.append("Steps: " + b.player.stableFCount / framesPerMove + "\n");
+            sb.append("Time: " + b.player.stableFCount * frameFreq + " milliseconds\n");
+            System.out.println(sb);
+            bf.append(sb);
+            bf.close();
+
+            Logic.averageRAM = 0;
+            Logic.ramCounter = 0;
+            b.player.stableFCount = 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /* Handles user key presses*/
