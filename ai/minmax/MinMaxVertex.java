@@ -17,6 +17,7 @@ public class MinMaxVertex implements Cloneable{
 		this.father = father;
 		this.children = children;
 		this.location = location;
+		this.value = Double.NaN;
 	}
 
 	void setValue(double value){this.value = value;}
@@ -66,5 +67,9 @@ public class MinMaxVertex implements Cloneable{
 			++length;
 		}
 		return ((max) ? "Ghost " : "Pacman ")+location.point.toString()+" length: "+length;
+	}
+
+	public boolean isEvaluated() {
+		return !(Double.isNaN(value));
 	}
 }

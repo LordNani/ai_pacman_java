@@ -31,11 +31,6 @@ public class VertexPoint extends Point implements EuclidVertex{
     }
 
     @Override
-    public int squaredDistance(EuclidVertex target){
-        return (((Point)target).x-x)*(((Point)target).x-x)+(((Point)target).y-y)*(((Point)target).y-y);
-    }
-
-    @Override
     public int getCostOfWayTo(EuclidVertex v) {
         return (path==null) ? 0 : path.size();
     }
