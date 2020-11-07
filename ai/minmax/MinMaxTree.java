@@ -38,7 +38,7 @@ public abstract class MinMaxTree {
 			if(neighbour_of_father!=null && !neighbour_of_father.equals(location_of_previous)) {
 				MinMaxVertex new_vertex = new MinMaxVertex(max, enemy_move, null, neighbour_of_father);
 				result.add(new_vertex);
-				if(neighbour_of_father.equals(enemy_move.getLocation())) new_vertex.setValue(getCollisionValue());
+				if(neighbour_of_father.equals(enemy_move.getLocation())) new_vertex.setValue(getCollisionValue(enemy_move));
 			}
 		}
 		enemy_move.setChildren(result);
@@ -65,7 +65,7 @@ public abstract class MinMaxTree {
 
 	private MinMaxVertex getMinVertex(ArrayList<MinMaxVertex> children) {
 		MinMaxVertex best_vertex = null;
-		double min = Double.POSITIVE_INFINITY;
+		double min = 10000001;
 		for(MinMaxVertex v : children){
 			if(min > v.getValue()){
 				min = v.getValue();
@@ -77,17 +77,20 @@ public abstract class MinMaxTree {
 
 	private MinMaxVertex getMaxVertex(ArrayList<MinMaxVertex> children) {
 		MinMaxVertex best_vertex = null;
-		double max = Double.NEGATIVE_INFINITY;
+		double max = -10000001;
 		for(MinMaxVertex v : children){
 			if(max<v.getValue()){
 				max = v.getValue();
 				best_vertex = v;
 			}
 		}
+		if(best_vertex==null){
+			System.out.println("bug");
+		}
 		return best_vertex;
 	}
 
-	protected abstract double getCollisionValue();
+	protected abstract double getCollisionValue(MinMaxVertex agent);
 
 	protected abstract double evaluateSituation(MinMaxVertex agent, MinMaxVertex enemy);
 

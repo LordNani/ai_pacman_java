@@ -17,13 +17,25 @@ public class PacmanMinMaxTree extends MinMaxTree {
 	}
 
 	@Override
-	protected double getCollisionValue() {
-		return Double.MIN_VALUE+1;
+	protected double getCollisionValue(MinMaxVertex agent) {
+		if(targets==null) return -10000000;
+		int collected_pellets = amountCollected(agent);
+			if(collected_pellets==targets.size()) return 10000000;
+			else return -10000000;
 	}
 
 	@Override
 	protected double evaluateSituation(MinMaxVertex agent, MinMaxVertex enemy) {
 		double distance = (double) mapGraph.shortestWay(agent.getLocation(), enemy.getLocation()).size();
+		int collected_pellets = amountCollected(agent);
+		if(distance==0.0){
+			if(collected_pellets==targets.size()) return 10000000;
+			else return -10000000;
+		}
+		return distance+collected_pellets;
+	}
+
+	private int amountCollected(MinMaxVertex agent) {
 		int collected_pellets = 0;
 		MinMaxVertex vertex = agent;
 		while(vertex!=null){
@@ -32,6 +44,6 @@ public class PacmanMinMaxTree extends MinMaxTree {
 			}
 			vertex = vertex.getFather();
 		}
-		return distance+collected_pellets;
+		return collected_pellets;
 	}
 }

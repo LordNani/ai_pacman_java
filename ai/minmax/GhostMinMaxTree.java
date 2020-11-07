@@ -12,8 +12,8 @@ public class GhostMinMaxTree extends MinMaxTree {
 	}
 
 	@Override
-	protected double getCollisionValue() {
-		return Double.MAX_VALUE-1;
+	protected double getCollisionValue(MinMaxVertex agent) {
+		return 10000000;
 	}
 
 	@Override
