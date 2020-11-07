@@ -50,6 +50,19 @@ public abstract class MinMaxTree {
 		return getMaxVertex(root.getChildren().get(0).getChildren()).getLocation();
 	}
 
+	LinkedList<MapTile> getBest(int amount_of_steps){
+		amount_of_steps = Math.min(amount_of_steps, depth);
+		LinkedList<MapTile> path = new LinkedList<>();
+		evaluate(root);
+		MinMaxVertex vertex = getMaxVertex(root.getChildren().get(0).getChildren());
+		for(int i=0; i<amount_of_steps; ++i){
+			MapTile next = vertex.getLocation();
+			path.add(next);
+			vertex = getMaxVertex(getMinVertex(vertex.getChildren()).getChildren());
+		}
+		return path;
+	}
+
 	private double evaluate(MinMaxVertex vertex) {
 		if(vertex==null){
 			System.out.println("Bug here");
