@@ -11,54 +11,12 @@ import static java.util.Objects.nonNull;
 
 
 /* Both main.Player and Ghost inherit main.Mover.  Has generic functions relevant to both*/
-class Mover {
-    /* Framecount is used to count animation frames*/
-    public int frameCount = 0;
-    public long stableFCount=0;
-
-    /* State contains the game map */
-    boolean[][] state;
-
-    /* gridSize is the size of one square in the game.
-       max is the height/width of the game.
-       increment is the speed at which the object moves,
-       1 increment per move() call */
-    int gridSize = 20;
-    int increment;
-
-    /* Generic constructor */
-    public Mover() {
-        increment = 20;
-        state = new boolean[gridSize -1][gridSize -1];
-        for (int i = 0; i < state.length; i++) {
-            for (int j = 0; j < state.length; j++) {
-                state[i][j] = false;
-            }
-        }
-    }
-
-    /* Updates the state information */
-    public void updateState(boolean[][] state) {
-        for (int i = 0; i < state.length; i++)
-            for (int j = 0; j < state.length; j++)
-                this.state[i][j] = state[i][j];
-    }
-
-    /* Determines if a set of coordinates is a valid destination.*/
-    public boolean isValidDest(int x, int y) {
-    /* The first statements check that the x and y are inbounds.  The last statement checks the map to
-       see if it's a valid location */
-        return (((x) % gridSize == 0) || ((y) % gridSize) == 0) && gridSize <= x && x < 400 && gridSize <= y && y < 400 && state[x / gridSize - 1][y / gridSize - 1];
-    }
-
-}
-
 
 /*This board class contains the player, ghosts, pellets, and most of the game logic.*/
 public class Board extends JPanel {
 
-    public Point plannedPoint;
-    public ArrayList<Point> plannedPath = new ArrayList<>();
+//    public Point plannedPoint;
+//    public ArrayList<Point> plannedPath = new ArrayList<>();
     /* Initialize the images*/
     /* For NOT JAR file*/
     Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg");
@@ -112,7 +70,8 @@ public class Board extends JPanel {
         ghosts.add(new Ghost(180,180,ghostImage1));
         ghosts.add(new Ghost(200,180,ghostImage2));
         ghosts.add(new Ghost(220,180,ghostImage3));
-        ghosts.add(new Ghost(220,180,ghostImage4));
+//        ghosts.add(new Ghost(220,180,ghostImage4));
+        reset();
     }
 
 	public boolean[] getSurroundingArea(){
@@ -150,10 +109,12 @@ public class Board extends JPanel {
             }
         }
 
-        plannedPoint = new Point();
-        plannedPath = new ArrayList<>();
+//        plannedPoint = new Point();
+//        plannedPath = new ArrayList<>();
         player.resetPlayer(200,300);
-
+        ghosts.get(0).resetGhost(180,180);
+        ghosts.get(1).resetGhost(200,180);
+        ghosts.get(2).resetGhost(220,180);
         updateStateAccordingToMap();
 
         //Resetting total pellet counter
@@ -163,10 +124,10 @@ public class Board extends JPanel {
         pellets[9][8] = false;
         pellets[10][8] = false;
 
-        state[9][7] = false;
-        state[8][8] = false;
-        state[9][8] = false;
-        state[10][8] = false;
+//        state[9][7] = false;
+//        state[8][8] = false;
+//        state[9][8] = false;
+//        state[10][8] = false;
         for (int i = 0; i < pellets.length; i++)
             for (int j = 0; j < pellets.length; j++)
                 if(pellets[i][j])
@@ -355,20 +316,20 @@ public class Board extends JPanel {
                 if(traversedTiles[i][j])
                     g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
 
-        g.setFont(font);
-        for(int i = 0; i < plannedPath.size(); i++){
-            g.setColor(Color.PINK);
-            g.fillRect(plannedPath.get(i).x * gridSize + offset, plannedPath.get(i).y * gridSize + offset, gridSize, gridSize);
-            g.setColor(Color.WHITE);
-            g.drawString(String.valueOf(i), plannedPath.get(i).x * gridSize + offset + offset/2, plannedPath.get(i).y * gridSize + offset+ offset/2);
-
-        }
-
-        g.setColor(Color.RED);
-        if(nonNull(plannedPoint)) {
-//            System.out.println("IN BOARD " + plannedPoint.toString());
-            g.fillRect(plannedPoint.x * gridSize + offset, plannedPoint.y * gridSize + offset, gridSize, gridSize);
-        }
+//        g.setFont(font);
+//        for(int i = 0; i < plannedPath.size(); i++){
+//            g.setColor(Color.PINK);
+//            g.fillRect(plannedPath.get(i).x * gridSize + offset, plannedPath.get(i).y * gridSize + offset, gridSize, gridSize);
+//            g.setColor(Color.WHITE);
+//            g.drawString(String.valueOf(i), plannedPath.get(i).x * gridSize + offset + offset/2, plannedPath.get(i).y * gridSize + offset+ offset/2);
+//
+//        }
+//
+//        g.setColor(Color.RED);
+//        if(nonNull(plannedPoint)) {
+////            System.out.println("IN BOARD " + plannedPoint.toString());
+//            g.fillRect(plannedPoint.x * gridSize + offset, plannedPoint.y * gridSize + offset, gridSize, gridSize);
+//        }
     }
 
     private void drawPacman(Graphics g){
@@ -400,8 +361,16 @@ public class Board extends JPanel {
 
     private void drawGhosts(Graphics g){
         for (Ghost ghost : ghosts){
+            drawGhost(ghost, g);
+        }
+    }
+
+    private void drawGhost(Ghost ghost, Graphics g) {
+        if(ghost.frameCount<1){
             g.drawImage(ghost.img, ghost.current.x, ghost.current.y,null);
         }
+        if (ghost.frameCount >= 3)
+            ghost.frameCount = 0;
     }
 
     public void paint(Graphics g) {
@@ -425,6 +394,9 @@ public class Board extends JPanel {
             drawBoard(g);
             /* Send the game map to player and all ghosts */
             player.updateState(state);
+            for(Ghost ghost : ghosts){
+                ghost.updateState(state);
+            }
         }
 
         drawBoard(g);
@@ -436,8 +408,8 @@ public class Board extends JPanel {
 
     }
 
-    public Player[] getGhosts() {
-        return new Player[]{player};
+    public ArrayList<Ghost> getGhosts() {
+        return ghosts;
     }
 
     public Player getPacman() {

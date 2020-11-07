@@ -2,13 +2,14 @@ package ai.minmax;
 
 import ai.Point;
 import main.Board;
+import main.Mover;
 import main.Player;
 
 public abstract class MinMaxLogic {
 	MapGraph mapGraph;
-	Player mover;
+	Mover mover;
 	Board board;
-	public MinMaxLogic(Player mover, Board board){
+	public MinMaxLogic(Mover mover, Board board){
 		this.board=board;
 		this.mover=mover;
 		this.mapGraph=new MapGraph(board.state);

@@ -31,7 +31,7 @@ public class AStarAlgorithm extends AwareAlgorithm {
 			}
 			else {
 				euclidVertices.add((EuclidVertex)v);
-				used.add((EuclidVertex)v);
+//				used.add((EuclidVertex)v);
 			}
 		}
 	}

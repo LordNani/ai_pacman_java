@@ -1,5 +1,6 @@
 package ai;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class VertexPoint extends Point implements EuclidVertex{
@@ -31,7 +32,16 @@ public class VertexPoint extends Point implements EuclidVertex{
     }
 
     @Override
+    public int squaredDistance(EuclidVertex v) {
+        return squaredDistance((Point)v);
+    }
+
+    @Override
     public int getCostOfWayTo(EuclidVertex v) {
         return (path==null) ? 0 : path.size();
+    }
+
+    public LinkedList<Integer> getPath() {
+        return path;
     }
 }

@@ -1,10 +1,7 @@
 package main;/* Drew Schuster */
 
 import ai.*;
-import ai.minmax.MapGraph;
-import ai.minmax.MinMaxTree;
-import ai.minmax.PacmanLogic;
-import ai.minmax.PacmanMinMaxTree;
+import ai.minmax.*;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -13,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.*;
+import java.util.ArrayList;
 
 /* This class contains the entire game... most of the game logic is in the main.Board class but this
    creates the gui and captures mouse and keyboard input, as well as controls the game states */
@@ -32,8 +30,8 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     Board b = new Board(boardSize);
     Sensor sensor;
     boolean isDFS = true;
+    ArrayList<Mover> movers;
 
-    Logic logic ;
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
 
@@ -67,6 +65,15 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             }
         });
 
+        movers = new ArrayList<>(b.ghosts.size()+1);
+        movers.add(b.player);
+
+        b.player.logic = new PacmanLogic(b.player, b);
+        for(Ghost g : b.ghosts){
+            g.logic = new GhostLogic(g, b);
+            movers.add(g);
+        }
+
         /* Start the timer */
         frameTimer.start();
 
@@ -77,10 +84,13 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
        Namely the area around every player ghost and the menu bars
     */
     public void repaint() {
-        b.repaint(0, 0, 600, 20);
-        b.repaint(0, 420, 600, 40);
-        b.repaint(b.player.current.x - boardSize, b.player.current.y - boardSize, boardSize * 4, boardSize * 4);
-
+//        b.repaint(0, 0, 600, 20);
+//        b.repaint(0, 420, 600, 40);
+//        b.repaint(b.player.current.x - boardSize, b.player.current.y - boardSize, boardSize * 4, boardSize * 4);
+//        for(Ghost g : b.ghosts){
+//            b.repaint(g.current.x - boardSize, g.current.y - boardSize, boardSize * 4, boardSize * 4);
+//        }
+        b.repaint(0, 0, 600, 600);
     }
 
     /* Steps the screen forward one frame */
@@ -107,23 +117,27 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
         /* If we have a normal game state, move all pieces and update pellet status */
         if (b.newGame == 0) {
-            if (b.player.stableFCount % framesPerMove == 0 && !b.player.inAction) {
-//                System.out.println("Move " + b.player.stableFCount / framesPerMove);
-                b.player.inAction = true;
-                b.player.currDirection = logic.makeMove(b.getSurroundingArea());
-                b.player.desiredPoint = b.player.moveInDirection(b.player.currDirection);
-                b.player.inAction = false;
-                b.plannedPoint = logic.plannedPoint;
-                b.plannedPath = logic.convertedPath;
+            if (b.player.stableFCount % framesPerMove == 0) {
+                for(Mover m : movers){
+                    if(!m.inAction){
+                        m.inAction = true;
+                        m.currDirection = m.logic.makeMove();
+                        m.desiredPoint = m.moveInDirection(m.currDirection);
+                        m.inAction = false;
+                    }
+                }
+                System.out.println("Ghost "+b.ghosts.get(0).getGridPosition());
             }
-            b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
+            for(Mover m : movers){
+                m.move();
+            }
+//            b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
 
             if (b.player.finished) {
                 saveResults();
                 b.newGame = 1;
 //                System.out.println("!!!WIN!!!");
             }
-            b.player.move();
 
 
         } else {
@@ -135,29 +149,26 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             /* Advance a frame to display main state*/
             repaint(0, 0, 600, 600);
             //Change algorithm on every game restart
-            Algorithm algorithm;
-            switch(currentAlgoritm){
-                case 0: algorithm = new DFSAlgorithm(b.player.getGridPosition()); break;
-                case 1: algorithm = new BFSAlgorithm(b.player.getGridPosition()); break;
-                case 2: algorithm = new GreedyAlgorithm(
-                        new VertexPoint(b.player.getGridPosition()),
-                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
-                ); break;
-                default: algorithm = new AStarAlgorithm(
-                        new VertexPoint(b.player.getGridPosition()),
-                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
-                ); break;
-            }
-            currentAlgoritm=(currentAlgoritm+1)%4;
-            logic = new Logic(boardSize-1, b.player.getGridPosition(),algorithm);
-//            logic = isDFS ? new Logic(boardSize - 1, b.player.getGridPosition(),
-//                    new DFSAlgorithm(b.player.getGridPosition())) : new Logic(boardSize - 1, b.player.getGridPosition(),
-//                    new BFSAlgorithm(b.player.getGridPosition()));
-//            ;
-            isDFS = !isDFS;
-
-
-            PacmanLogic pacmanLogic = new PacmanLogic(b.player, b);
+//            Algorithm algorithm;
+//            switch(currentAlgoritm){
+//                case 0: algorithm = new DFSAlgorithm(b.player.getGridPosition()); break;
+//                case 1: algorithm = new BFSAlgorithm(b.player.getGridPosition()); break;
+//                case 2: algorithm = new GreedyAlgorithm(
+//                        new VertexPoint(b.player.getGridPosition()),
+//                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
+//                ); break;
+//                default: algorithm = new AStarAlgorithm(
+//                        new VertexPoint(b.player.getGridPosition()),
+//                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
+//                ); break;
+//            }
+//            currentAlgoritm=(currentAlgoritm+1)%4;
+//            logic = new Logic(boardSize-1, b.player.getGridPosition(),algorithm);
+////            logic = isDFS ? new Logic(boardSize - 1, b.player.getGridPosition(),
+////                    new DFSAlgorithm(b.player.getGridPosition())) : new Logic(boardSize - 1, b.player.getGridPosition(),
+////                    new BFSAlgorithm(b.player.getGridPosition()));
+////            ;
+//            isDFS = !isDFS;
 
 
             b.newGame = 0;

@@ -9,7 +9,8 @@ public abstract class AwareAlgorithm implements Algorithm {
 	EuclidVertex position;
 	public AwareAlgorithm(EuclidVertex startPosition, EuclidVertex targetPosition){
 		this.targetPosition=targetPosition;
-		updateVertex(startPosition);
+		this.position=startPosition;
+		used.add(startPosition);
 	}
 
 	@Override
@@ -29,7 +30,9 @@ public abstract class AwareAlgorithm implements Algorithm {
 				closest_index=i;
 			}
 		}
-		return euclidVertices.remove(closest_index);
+		EuclidVertex removed = euclidVertices.remove(closest_index);
+		used.add(removed);
+		return removed;
 	}
 
 	public void updatePosition(EuclidVertex ev) {

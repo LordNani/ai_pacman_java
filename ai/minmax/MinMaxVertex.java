@@ -66,7 +66,7 @@ public class MinMaxVertex implements Cloneable{
 			c_father = c_father.getFather();
 			++length;
 		}
-		return ((max) ? "Ghost " : "Pacman ")+location.point.toString()+" length: "+length;
+		return ((max) ? "MAX " : "MIN ")+location.point.toString()+" length: "+length;
 	}
 
 	public boolean isEvaluated() {

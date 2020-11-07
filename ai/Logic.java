@@ -10,7 +10,7 @@ public class Logic {
     LinkedList<Integer> planned_path = new LinkedList<>();
     public ArrayList<Point> convertedPath = new ArrayList<>();
     // position.path - list of directions from initial position
-    VertexPoint position;
+    public VertexPoint position;
     Algorithm a;
     public Point plannedPoint;
 
@@ -31,8 +31,11 @@ public class Logic {
             if (!a.isFinished()) {
                 getNextPoint();
             } else {
-                System.out.println("We have a problem, this shouldn't happen");
-                return 0;
+                try {
+                    throw new Exception("Empty vertex list!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         int step = planned_path.pollFirst();
@@ -51,7 +54,7 @@ public class Logic {
 
     private void getNextPoint() {
         if(a instanceof AwareAlgorithm){
-            System.out.println("aware");
+//            System.out.println("aware");
             ((AwareAlgorithm) a).updatePosition(position);
         }
         VertexPoint next = (VertexPoint) a.getNextVertex();
@@ -118,7 +121,10 @@ public class Logic {
                 --res_pos.x;
                 break;
         }
-        res_pos.path.addLast(currDirection);
+        if(!res_pos.path.isEmpty() && Math.abs(res_pos.path.getLast()-currDirection)==2){
+            res_pos.path.removeLast();
+        }
+        else res_pos.path.addLast(currDirection);
         return res_pos;
     }
 
@@ -137,6 +143,10 @@ public class Logic {
         }
         ++ramCounter;
 
+    }
+
+    public VertexPoint getPosition() {
+        return position;
     }
 }
 

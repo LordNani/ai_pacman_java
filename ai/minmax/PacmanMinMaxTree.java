@@ -18,6 +18,6 @@ public class PacmanMinMaxTree extends MinMaxTree {
 
 	@Override
 	protected double evaluateSituation() {
-		return (double) location.point.squaredDistance((EuclidVertex) enemy_location.point);
+		return (double) mapGraph.shortestWay(location, enemy_location).size();
 	}
 }

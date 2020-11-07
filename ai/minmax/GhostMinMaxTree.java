@@ -18,6 +18,6 @@ public class GhostMinMaxTree extends MinMaxTree {
 
 	@Override
 	protected double evaluateSituation() {
-		return -1.0*location.point.squaredDistance((EuclidVertex) enemy_location.point);
+		return -1.0*mapGraph.shortestWay(location, enemy_location).size();
 	}
 }

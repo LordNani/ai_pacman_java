@@ -47,10 +47,14 @@ public abstract class MinMaxTree {
 
 	MapTile getBest(){
 		evaluate(root);
-		return getMaxVertex(root.getChildren()).getLocation();
+		return getMaxVertex(root.getChildren().get(0).getChildren()).getLocation();
 	}
 
 	private double evaluate(MinMaxVertex vertex) {
+		if(vertex==null){
+			System.out.println("Bug here");
+		}
+
 		if(vertex.isEvaluated()) return vertex.getValue();
 		if(vertex.getChildren()==null || vertex.getChildren().isEmpty()) return evaluateSituation();
 		for(MinMaxVertex child : vertex.getChildren())
@@ -61,7 +65,7 @@ public abstract class MinMaxTree {
 
 	private MinMaxVertex getMinVertex(ArrayList<MinMaxVertex> children) {
 		MinMaxVertex best_vertex = null;
-		double min = Double.MAX_VALUE;
+		double min = Double.POSITIVE_INFINITY;
 		for(MinMaxVertex v : children){
 			if(min > v.getValue()){
 				min = v.getValue();
@@ -73,7 +77,7 @@ public abstract class MinMaxTree {
 
 	private MinMaxVertex getMaxVertex(ArrayList<MinMaxVertex> children) {
 		MinMaxVertex best_vertex = null;
-		double max = Double.MIN_VALUE;
+		double max = Double.NEGATIVE_INFINITY;
 		for(MinMaxVertex v : children){
 			if(max<v.getValue()){
 				max = v.getValue();

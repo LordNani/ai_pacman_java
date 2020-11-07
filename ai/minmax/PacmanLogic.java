@@ -2,12 +2,13 @@ package ai.minmax;
 
 import ai.Point;
 import main.Board;
+import main.Ghost;
 import main.Player;
 
 import java.util.ArrayList;
 
 public class PacmanLogic extends MinMaxLogic{
-	Player[] ghosts;
+	ArrayList<Ghost> ghosts;
 	ArrayList<Point> targets;
 
 	public PacmanLogic(Player mover, Board board) {
@@ -19,9 +20,9 @@ public class PacmanLogic extends MinMaxLogic{
 	@Override
 	public int makeMove() {
 		PacmanMinMaxTree choice_tree = new PacmanMinMaxTree(mapGraph,
-				5,
+				3,
 				mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
-				mapGraph.tiles[ghosts[0].getGridPosition().x][ghosts[0].getGridPosition().y]);
+				mapGraph.tiles[ghosts.get(0).getGridPosition().x][ghosts.get(0).getGridPosition().y]);
 		MapTile next_tile = choice_tree.getBest();
 		return mover.getGridPosition().directionTo(next_tile.point);
 	}
