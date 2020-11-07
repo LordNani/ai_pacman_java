@@ -56,7 +56,7 @@ public abstract class MinMaxTree {
 		}
 
 		if(vertex.isEvaluated()) return vertex.getValue();
-		if(vertex.getChildren()==null || vertex.getChildren().isEmpty()) return evaluateSituation();
+		if(vertex.getChildren()==null || vertex.getChildren().isEmpty()) return evaluateSituation(vertex.getFather(), vertex);
 		for(MinMaxVertex child : vertex.getChildren())
 			child.setValue(evaluate(child));
 		if(vertex.isMax()) return getMaxVertex(vertex.getChildren()).getValue();
@@ -89,6 +89,6 @@ public abstract class MinMaxTree {
 
 	protected abstract double getCollisionValue();
 
-	protected abstract double evaluateSituation();
+	protected abstract double evaluateSituation(MinMaxVertex agent, MinMaxVertex enemy);
 
 }

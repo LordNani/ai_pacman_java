@@ -14,12 +14,13 @@ public class GhostLogic extends MinMaxLogic {
 
 	@Override
 	public int makeMove() {
-//		GhostMinMaxTree choice_tree = new GhostMinMaxTree(mapGraph,
-//				5,
-//				mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
-//				mapGraph.tiles[pacman.getGridPosition().x][pacman.getGridPosition().y]);
-//		MapTile next_tile = choice_tree.getBest();
-		int next = mapGraph.shortestWay(mover.getGridPosition(), pacman.getGridPosition()).get(0);
-		return next;
+		GhostMinMaxTree choice_tree = new GhostMinMaxTree(mapGraph,
+				5,
+				mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
+				mapGraph.tiles[pacman.getGridPosition().x][pacman.getGridPosition().y]);
+		MapTile next_tile = choice_tree.getBest();
+		return mover.getGridPosition().directionTo(next_tile.point);
+//		int next = mapGraph.shortestWay(mover.getGridPosition(), pacman.getGridPosition()).get(0);
+//		return next;
 	}
 }

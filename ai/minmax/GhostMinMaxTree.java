@@ -8,7 +8,7 @@ public class GhostMinMaxTree extends MinMaxTree {
 	public GhostMinMaxTree(MapGraph mapGraph, int depth, MapTile location, MapTile enemy_location) {
 		super(mapGraph, depth, location, enemy_location);
 		this.location = location;
-		this.enemy_location = location;
+		this.enemy_location = enemy_location;
 	}
 
 	@Override
@@ -17,7 +17,8 @@ public class GhostMinMaxTree extends MinMaxTree {
 	}
 
 	@Override
-	protected double evaluateSituation() {
-		return -1.0*mapGraph.shortestWay(location, enemy_location).size();
+	protected double evaluateSituation(MinMaxVertex agent, MinMaxVertex enemy) {
+		double distance = (double) mapGraph.shortestWay(agent.getLocation(), enemy.getLocation()).size();
+		return -1*distance;
 	}
 }

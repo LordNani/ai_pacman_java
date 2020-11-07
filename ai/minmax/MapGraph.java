@@ -5,8 +5,6 @@ import ai.Logic;
 import ai.Point;
 import ai.VertexPoint;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MapGraph {
@@ -35,15 +33,8 @@ public class MapGraph {
 			}
 	}
 
-	public ArrayList<Integer> shortestWay(MapTile start, MapTile end){
-		Point current = start.point.clone();
-		ArrayList<Integer> path = new ArrayList<>();
-		Logic logic = new Logic(tiles.length, start.point, new AStarAlgorithm(new VertexPoint(start.point), new VertexPoint(end.point)));
-		while(!current.equals(end.point)){
-			int next_step = logic.makeMove(getSurroundingArea(current));
-			current.moveInDirection(next_step, 1);
-		}
-		return path;
+	public LinkedList<Integer> shortestWay(MapTile start, MapTile end){
+		return shortestWay(start.point, end.point);
 	}
 
 	public LinkedList<Integer> shortestWay(Point start, Point end){

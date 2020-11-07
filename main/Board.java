@@ -422,4 +422,13 @@ public class Board extends JPanel {
         points.add(new Point(0,1));
         return points;
     }
+
+    public ArrayList<Point> getPellets() {
+        ArrayList<Point> result = new ArrayList<>();
+        for (int i = 0; i < pellets.length; i++)
+            for (int j = 0; j < pellets.length; j++){
+                if(pellets[i][j]) result.add(new Point(i, j));
+            }
+        return result;
+    }
 }

@@ -15,14 +15,16 @@ public class PacmanLogic extends MinMaxLogic{
 		super(mover, board);
 		ghosts = board.getGhosts();
 		targets = board.getTargets();
+		targets = board.getPellets();
 	}
 
 	@Override
 	public int makeMove() {
 		PacmanMinMaxTree choice_tree = new PacmanMinMaxTree(mapGraph,
-				3,
+				10,
 				mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
-				mapGraph.tiles[ghosts.get(0).getGridPosition().x][ghosts.get(0).getGridPosition().y]);
+				mapGraph.tiles[ghosts.get(0).getGridPosition().x][ghosts.get(0).getGridPosition().y],
+				targets);
 		MapTile next_tile = choice_tree.getBest();
 		return mover.getGridPosition().directionTo(next_tile.point);
 	}
