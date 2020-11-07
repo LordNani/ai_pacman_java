@@ -416,13 +416,6 @@ public class Board extends JPanel {
         return player;
     }
 
-    public ArrayList<Point> getTargets() {
-        ArrayList<Point> points = new ArrayList<>();
-        points.add(new Point(0,0));
-        points.add(new Point(0,1));
-        return points;
-    }
-
     public ArrayList<Point> getPellets() {
         ArrayList<Point> result = new ArrayList<>();
         for (int i = 0; i < pellets.length; i++)
