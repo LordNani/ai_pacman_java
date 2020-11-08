@@ -1,7 +1,7 @@
 package ai;
 
 public interface Vertex {
-	boolean equals(Object player_pos);
+    boolean equals(Object player_pos);
 
-	boolean isConnected(Vertex v);
+    boolean isConnected(Vertex v);
 }
