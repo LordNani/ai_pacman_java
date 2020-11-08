@@ -45,9 +45,9 @@ public abstract class MinMaxTree {
 		return result;
 	}
 
-	MapTile getBest(){
+	MinMaxVertex getBest(){
 		evaluate(root);
-		return getMaxVertex(root.getChildren().get(0).getChildren()).getLocation();
+		return getMaxVertex(root.getChildren().get(0).getChildren());
 	}
 
 	LinkedList<MapTile> getBest(int amount_of_steps){

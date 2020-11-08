@@ -126,6 +126,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
                         m.inAction = false;
                     }
                 }
+//                b.plannedPath = b.player.logic.getPlannedPath();
                 System.out.println("Ghost "+b.ghosts.get(0).getGridPosition());
             }
             for(Mover m : movers){

@@ -5,6 +5,8 @@ import main.Board;
 import main.Mover;
 import main.Player;
 
+import java.util.ArrayList;
+
 public abstract class MinMaxLogic {
 	MapGraph mapGraph;
 	Mover mover;
@@ -16,6 +18,8 @@ public abstract class MinMaxLogic {
 	}
 
 	public abstract int makeMove();
+
+	public abstract ArrayList<Point> getPlannedPath();
 }
 
 /*

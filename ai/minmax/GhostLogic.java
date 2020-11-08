@@ -1,9 +1,11 @@
 package ai.minmax;
 
+import ai.Point;
 import main.Board;
 import main.Ghost;
 import main.Player;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GhostLogic extends MinMaxLogic {
@@ -28,5 +30,10 @@ public class GhostLogic extends MinMaxLogic {
 		return mover.getGridPosition().directionTo(current_path.removeFirst().point);
 //		int next = mapGraph.shortestWay(mover.getGridPosition(), pacman.getGridPosition()).get(0);
 //		return next;
+	}
+
+	@Override
+	public ArrayList<Point> getPlannedPath() {
+		return null;
 	}
 }

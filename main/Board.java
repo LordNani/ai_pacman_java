@@ -16,7 +16,7 @@ import static java.util.Objects.nonNull;
 public class Board extends JPanel {
 
 //    public Point plannedPoint;
-//    public ArrayList<Point> plannedPath = new ArrayList<>();
+    public ArrayList<Point> plannedPath = new ArrayList<>();
     /* Initialize the images*/
     /* For NOT JAR file*/
     Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg");
@@ -110,7 +110,7 @@ public class Board extends JPanel {
         }
 
 //        plannedPoint = new Point();
-//        plannedPath = new ArrayList<>();
+        plannedPath = new ArrayList<>();
         player.resetPlayer(200,300);
         ghosts.get(0).resetGhost(180,180);
         ghosts.get(1).resetGhost(200,180);
@@ -308,13 +308,13 @@ public class Board extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(player.last.x, player.last.y, 20, 20);
 
-        traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
-        g.setColor(new Color(253,106,2,255));
-        // Drawing traversed path
-        for(int i = 0; i < traversedTiles.length; i++)
-            for(int j = 0; j < traversedTiles.length; j++)
-                if(traversedTiles[i][j])
-                    g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
+//        traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
+//        g.setColor(new Color(253,106,2,255));
+//        // Drawing traversed path
+//        for(int i = 0; i < traversedTiles.length; i++)
+//            for(int j = 0; j < traversedTiles.length; j++)
+//                if(traversedTiles[i][j])
+//                    g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
 
 //        g.setFont(font);
 //        for(int i = 0; i < plannedPath.size(); i++){
@@ -401,7 +401,7 @@ public class Board extends JPanel {
         }
 
         drawBoard(g);
-//        drawPlanned(g);
+        drawPlanned(g);
         drawPellets(g);
         drawPacman(g);
         drawGhosts(g);
