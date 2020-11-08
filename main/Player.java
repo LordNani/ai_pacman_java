@@ -3,42 +3,43 @@ package main;
 import ai.Point;
 
 public class Player extends Mover {
-	boolean finished = false;
-	int collectedPellets = 0;
-	/* Constructor places pacman in initial location and orientation */
-	public Player(int x, int y) {
-		super();
-		finished = false;
-		this.current = new Point(x,y);
-		this.last = new Point(current);
-		currDirection = 3;
-		desiredPoint = current;
-	}
+    boolean finished = false;
+    int collectedPellets = 0;
 
-	public void resetPlayer(int x, int y){
-		finished = false;
-		this.current = new Point(x,y);
-		this.last = new Point(current);
-		currDirection = 3;
-		desiredPoint = current;
-		frameCount = 0;
-		stableFCount=0;
-		collectedPellets = 0;
-	}
+    /* Constructor places pacman in initial location and orientation */
+    public Player(int x, int y) {
+        super();
+        finished = false;
+        this.current = new Point(x, y);
+        this.last = new Point(current);
+        currDirection = 3;
+        desiredPoint = current;
+    }
 
-	public Point getPosition() {
-		return current;
-	}
+    public void resetPlayer(int x, int y) {
+        finished = false;
+        this.current = new Point(x, y);
+        this.last = new Point(current);
+        currDirection = 3;
+        desiredPoint = current;
+        frameCount = 0;
+        stableFCount = 0;
+        collectedPellets = 0;
+    }
 
-	public Point getGridPosition() {
-		return toGridFormat(current);
-	}
+    public Point getPosition() {
+        return current;
+    }
 
-	public int getCollectedPellets() {
-		return collectedPellets;
-	}
+    public Point getGridPosition() {
+        return toGridFormat(current);
+    }
 
-	//	/* The move function moves the pacman for one frame in non demo mode */
+    public int getCollectedPellets() {
+        return collectedPellets;
+    }
+
+    //	/* The move function moves the pacman for one frame in non demo mode */
 //	public void move() {
 //		++stableFCount;
 //
@@ -90,7 +91,7 @@ public class Player extends Mover {
 //	}
 
 
-	public Point toGridFormat(Point point) {
-		return new Point(point.x/gridSize-1, point.y/gridSize-1);
-	}
+    public Point toGridFormat(Point point) {
+        return new Point(point.x / gridSize - 1, point.y / gridSize - 1);
+    }
 }

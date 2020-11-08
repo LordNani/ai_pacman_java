@@ -2,12 +2,11 @@ package main;/* Drew Schuster */
 
 import ai.Point;
 
+import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-import javax.swing.JPanel;
-import java.util.*;
-
-import static java.util.Objects.nonNull;
+import static main.MapParser.getMapFromFile;
 
 
 /* Both main.Player and Ghost inherit main.Mover.  Has generic functions relevant to both*/
@@ -15,7 +14,7 @@ import static java.util.Objects.nonNull;
 /*This board class contains the player, ghosts, pellets, and most of the game logic.*/
 public class Board extends JPanel {
 
-//    public Point plannedPoint;
+    //    public Point plannedPoint;
     public ArrayList<Point> plannedPath = new ArrayList<>();
     /* Initialize the images*/
     /* For NOT JAR file*/
@@ -33,10 +32,8 @@ public class Board extends JPanel {
 
     /* Initialize the player and ghosts */
     Player player = new Player(200, 300);
-
-
     ArrayList<Ghost> ghosts = new ArrayList<>();
-
+    ArrayList<Point> map = new ArrayList<>();
     /*Contains the game map, passed to player and ghosts */
     public boolean[][] state;
 
@@ -45,7 +42,7 @@ public class Board extends JPanel {
     int offset = 20;
 
     boolean[][] traversedTiles;
-    boolean pellets[][];
+    boolean[][] pellets;
     /* State flags*/
     boolean titleScreen;
     int newGame;
@@ -55,9 +52,9 @@ public class Board extends JPanel {
 
     /* This is the font used for the menus */
     Font font = new Font("Monospaced", Font.BOLD, 12);
-	private ai.Point possible_next_point;
+    private ai.Point possible_next_point;
 
-	/* Constructor initializes state flags etc.*/
+    /* Constructor initializes state flags etc.*/
     public Board(int boardSize) {
 
         sounds = new GameSounds();
@@ -65,24 +62,25 @@ public class Board extends JPanel {
         newGame = 0;
         titleScreen = true;
         traversedTiles = new boolean[gridSize][gridSize];
-        pellets = new boolean[gridSize ][gridSize];
-        ghosts.add(new Ghost(180,180,ghostImage1));
-        ghosts.add(new Ghost(200,180,ghostImage2));
-        ghosts.add(new Ghost(220,180,ghostImage3));
+        pellets = new boolean[gridSize][gridSize];
+        ghosts.add(new Ghost(180, 180, ghostImage1));
+        ghosts.add(new Ghost(200, 180, ghostImage2));
+        ghosts.add(new Ghost(220, 180, ghostImage3));
+        map = getMapFromFile("first.txt");
 //        ghosts.add(new Ghost(220,180,ghostImage4));
         reset();
     }
 
-	public boolean[] getSurroundingArea(){
-		boolean[] result = new boolean[4];
-		ai.Point player_pos = player.getPosition();
-		for(int i=0; i<4; ++i){
-			Point possible_next_point = player.moveInDirection(i);
-			// If pacman can go in chosen direction, possible_next_point will be different from current position
-			result[i]=!possible_next_point.equals(player_pos);
-		}
-		return result;
-	}
+    public boolean[] getSurroundingArea() {
+        boolean[] result = new boolean[4];
+        ai.Point player_pos = player.getPosition();
+        for (int i = 0; i < 4; ++i) {
+            Point possible_next_point = player.moveInDirection(i);
+            // If pacman can go in chosen direction, possible_next_point will be different from current position
+            result[i] = !possible_next_point.equals(player_pos);
+        }
+        return result;
+    }
 
     /* Reset occurs on a new game*/
     public void reset() {
@@ -96,7 +94,7 @@ public class Board extends JPanel {
 
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state.length; j++) {
-                if(state[i][j])
+                if (state[i][j])
                     pellets[i][j] = true;
             }
         }
@@ -110,10 +108,10 @@ public class Board extends JPanel {
 
 //        plannedPoint = new Point();
         plannedPath = new ArrayList<>();
-        player.resetPlayer(200,300);
-        ghosts.get(0).resetGhost(180,180);
-        ghosts.get(1).resetGhost(200,180);
-        ghosts.get(2).resetGhost(220,180);
+        player.resetPlayer(200, 300);
+        ghosts.get(0).resetGhost(180, 180);
+        ghosts.get(1).resetGhost(200, 180);
+        ghosts.get(2).resetGhost(220, 180);
         updateStateAccordingToMap();
 
         //Resetting total pellet counter
@@ -123,76 +121,20 @@ public class Board extends JPanel {
         pellets[9][8] = false;
         pellets[10][8] = false;
 
-//        state[9][7] = false;
-//        state[8][8] = false;
-//        state[9][8] = false;
-//        state[10][8] = false;
         for (int i = 0; i < pellets.length; i++)
             for (int j = 0; j < pellets.length; j++)
-                if(pellets[i][j])
+                if (pellets[i][j])
                     totalPellets++;
 
         System.out.println("Total pellets on the map: " + totalPellets);
     }
 
     private void updateStateAccordingToMap() {
-
-        updateMap(40, 40, 60, 20);
-        updateMap(120, 40, 60, 20);
-        updateMap(200, 20, 20, 40);
-        updateMap(240, 40, 60, 20);
-        updateMap(320, 40, 60, 20);
-        updateMap(40, 80, 60, 20);
-        updateMap(160, 80, 100, 20);
-        updateMap(200, 80, 20, 60);
-        updateMap(320, 80, 60, 20);
-
-        updateMap(20, 120, 80, 60);
-        updateMap(320, 120, 80, 60);
-        updateMap(20, 200, 80, 60);
-        updateMap(320, 200, 80, 60);
-
-        updateMap(160, 160, 40, 20);
-        updateMap(220, 160, 40, 20);
-        updateMap(160, 180, 20, 20);
-        updateMap(160, 200, 100, 20);
-        updateMap(240, 180, 20, 20);
-
-
-        updateMap(120, 120, 60, 20);
-        updateMap(120, 80, 20, 100);
-        updateMap(280, 80, 20, 100);
-        updateMap(240, 120, 60, 20);
-
-        updateMap(280, 200, 20, 60);
-        updateMap(120, 200, 20, 60);
-        updateMap(160, 240, 100, 20);
-        updateMap(200, 260, 20, 40);
-
-        updateMap(120, 280, 60, 20);
-        updateMap(240, 280, 60, 20);
-
-        updateMap(40, 280, 60, 20);
-        updateMap(80, 280, 20, 60);
-        updateMap(320, 280, 60, 20);
-        updateMap(320, 280, 20, 60);
-
-        updateMap(20, 320, 40, 20);
-        updateMap(360, 320, 40, 20);
-        updateMap(160, 320, 100, 20);
-        updateMap(200, 320, 20, 60);
-
-        updateMap(40, 360, 140, 20);
-        updateMap(240, 360, 140, 20);
-        updateMap(280, 320, 20, 60);
-        updateMap(120, 320, 20, 60);
+        for (Point p : map) {
+            updateMap(p.x * gridSize + gridSize, p.y * gridSize + gridSize, gridSize, gridSize);
+        }
     }
 
-    /* Function is called during drawing of the map.
-       Whenever the a portion of the map is covered up with a barrier,
-       the map and pellets arrays are updated accordingly to note
-       that those are invalid locations to travel or put pellets
-    */
     public void updateMap(int x, int y, int width, int height) {
         for (int i = x / gridSize; i < x / gridSize + width / gridSize; i++) {
             for (int j = y / gridSize; j < y / gridSize + height / gridSize; j++) {
@@ -203,137 +145,46 @@ public class Board extends JPanel {
             for (int j = 0; j < state.length; j++) {
                 pellets[i][j] = state[i][j];
 
-//                if(pellets[j][i])   System.out.print(" * "); else System.out.print(" 0 ");
             }
-//            System.out.println();
         }
-
-//        System.out.println();
     }
 
-    private void drawPellets(Graphics g)
-    {
+    private void drawPellets(Graphics g) {
         g.setColor(Color.YELLOW);
-        for (int i=0;i<pellets.length;i++)
-            for (int j=0;j<pellets.length;j++)
-            {
-                if(player.getGridPosition().equals(new Point(i,j)) && pellets[i][j]) {
+        for (int i = 0; i < pellets.length; i++)
+            for (int j = 0; j < pellets.length; j++) {
+                if (player.getGridPosition().equals(new Point(i, j)) && pellets[i][j]) {
                     pellets[i][j] = false;
                     player.collectedPellets++;
                     System.out.println(player.collectedPellets);
 //                    System.out.println("Pellet eaten  " + (i) + ":" +(j));
                 }
-                if (pellets[i][j ])
-                    g.fillOval(i*gridSize+ 8 + gridSize,j*gridSize+8+ gridSize,4,4);
+                if (pellets[i][j])
+                    g.fillOval(i * gridSize + 8 + gridSize, j * gridSize + 8 + gridSize, 4, 4);
             }
     }
 
-    /*  This function draws the board.  The pacman board is really complicated and can only feasibly be done
-        manually.  Whenever I draw a wall, I call updateMap to invalidate those coordinates.  This way the pacman
-        and ghosts know that they can't traverse this area */
     private void drawBoard(Graphics g) {
 
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 600, 600);
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 420, 420);
 
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 20, 600);
-        g.fillRect(0, 0, 600, 20);
         g.setColor(Color.WHITE);
         g.drawRect(19, 19, 382, 382);
-        g.setColor(Color.BLUE);
 
-        g.fillRect(40, 40, 60, 20);
-        g.fillRect(120, 40, 60, 20);
-        g.fillRect(200, 20, 20, 40);
-        g.fillRect(240, 40, 60, 20);
-        g.fillRect(320, 40, 60, 20);
-        g.fillRect(40, 80, 60, 20);
-        g.fillRect(160, 80, 100, 20);
-        g.fillRect(200, 80, 20, 60);
-        g.fillRect(320, 80, 60, 20);
-
-        g.fillRect(20, 120, 80, 60);
-        g.fillRect(320, 120, 80, 60);
-        g.fillRect(20, 200, 80, 60);
-        g.fillRect(320, 200, 80, 60);
-
-        g.fillRect(160, 160, 40, 20);
-        g.fillRect(220, 160, 40, 20);
-        g.fillRect(160, 180, 20, 20);
-        g.fillRect(160, 200, 100, 20);
-        g.fillRect(240, 180, 20, 20);
-        g.setColor(Color.BLUE);
-
-
-        g.fillRect(120, 120, 60, 20);
-        g.fillRect(120, 80, 20, 100);
-        g.fillRect(280, 80, 20, 100);
-        g.fillRect(240, 120, 60, 20);
-
-        g.fillRect(280, 200, 20, 60);
-        g.fillRect(120, 200, 20, 60);
-        g.fillRect(160, 240, 100, 20);
-        g.fillRect(200, 260, 20, 40);
-
-        g.fillRect(120, 280, 60, 20);
-        g.fillRect(240, 280, 60, 20);
-
-        g.fillRect(40, 280, 60, 20);
-        g.fillRect(80, 280, 20, 60);
-        g.fillRect(320, 280, 60, 20);
-        g.fillRect(320, 280, 20, 60);
-
-        g.fillRect(20, 320, 40, 20);
-        g.fillRect(360, 320, 40, 20);
-        g.fillRect(160, 320, 100, 20);
-        g.fillRect(200, 320, 20, 60);
-
-        g.fillRect(40, 360, 140, 20);
-        g.fillRect(240, 360, 140, 20);
-        g.fillRect(280, 320, 20, 40);
-        g.fillRect(120, 320, 20, 60);
-
-
-
+        for (Point p : map) {
+            g.fillRect(p.x * gridSize + gridSize, p.y * gridSize + gridSize, gridSize, gridSize);
+        }
     }
 
-    private void drawPlanned(Graphics g){
-        /* Delete the players  */
-        g.setColor(Color.BLACK);
-        g.fillRect(player.last.x, player.last.y, 20, 20);
-
-//        traversedTiles[(player.current.x)/gridSize][(player.current.y)/gridSize] = !player.finished;
-//        g.setColor(new Color(253,106,2,255));
-//        // Drawing traversed path
-//        for(int i = 0; i < traversedTiles.length; i++)
-//            for(int j = 0; j < traversedTiles.length; j++)
-//                if(traversedTiles[i][j])
-//                    g.fillRect(i*gridSize, j*gridSize, gridSize, gridSize);
-
-//        g.setFont(font);
-//        for(int i = 0; i < plannedPath.size(); i++){
-//            g.setColor(Color.PINK);
-//            g.fillRect(plannedPath.get(i).x * gridSize + offset, plannedPath.get(i).y * gridSize + offset, gridSize, gridSize);
-//            g.setColor(Color.WHITE);
-//            g.drawString(String.valueOf(i), plannedPath.get(i).x * gridSize + offset + offset/2, plannedPath.get(i).y * gridSize + offset+ offset/2);
-//
-//        }
-//
-//        g.setColor(Color.RED);
-//        if(nonNull(plannedPoint)) {
-////            System.out.println("IN BOARD " + plannedPoint.toString());
-//            g.fillRect(plannedPoint.x * gridSize + offset, plannedPoint.y * gridSize + offset, gridSize, gridSize);
-//        }
+    private void drawPlanned(Graphics g) {
     }
 
-    private void drawPacman(Graphics g){
+    private void drawPacman(Graphics g) {
         /* Draw the pacman */
         if (player.frameCount < 1) {
             /* Draw mouth closed */
-            g.drawImage(pacmanImage, player.current.x, player.current.y, Color.BLACK, null);
+            g.drawImage(pacmanImage, player.current.x, player.current.y, null);
         } else {
             /* Draw mouth open in appropriate direction */
             if (player.frameCount >= 3)
@@ -356,14 +207,14 @@ public class Board extends JPanel {
         }
     }
 
-    private void drawGhosts(Graphics g){
-        for (Ghost ghost : ghosts){
+    private void drawGhosts(Graphics g) {
+        for (Ghost ghost : ghosts) {
             drawGhost(ghost, g);
         }
     }
 
     private void drawGhost(Ghost ghost, Graphics g) {
-        g.drawImage(ghost.img, ghost.current.x, ghost.current.y,null);
+        g.drawImage(ghost.img, ghost.current.x, ghost.current.y, null);
 //        if(ghost.frameCount<1){
 //
 //        }
@@ -392,7 +243,7 @@ public class Board extends JPanel {
             drawBoard(g);
             /* Send the game map to player and all ghosts */
             player.updateState(state);
-            for(Ghost ghost : ghosts){
+            for (Ghost ghost : ghosts) {
                 ghost.updateState(state);
             }
         }
@@ -417,8 +268,8 @@ public class Board extends JPanel {
     public ArrayList<Point> getPellets() {
         ArrayList<Point> result = new ArrayList<>();
         for (int i = 0; i < pellets.length; i++)
-            for (int j = 0; j < pellets.length; j++){
-                if(pellets[i][j]) result.add(new Point(i, j));
+            for (int j = 0; j < pellets.length; j++) {
+                if (pellets[i][j]) result.add(new Point(i, j));
             }
         return result;
     }

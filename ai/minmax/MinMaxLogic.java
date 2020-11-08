@@ -3,23 +3,23 @@ package ai.minmax;
 import ai.Point;
 import main.Board;
 import main.Mover;
-import main.Player;
 
 import java.util.ArrayList;
 
 public abstract class MinMaxLogic {
-	MapGraph mapGraph;
-	Mover mover;
-	Board board;
-	public MinMaxLogic(Mover mover, Board board){
-		this.board=board;
-		this.mover=mover;
-		this.mapGraph=new MapGraph(board.state);
-	}
+    MapGraph mapGraph;
+    Mover mover;
+    Board board;
 
-	public abstract int makeMove();
+    public MinMaxLogic(Mover mover, Board board) {
+        this.board = board;
+        this.mover = mover;
+        this.mapGraph = new MapGraph(board.state);
+    }
 
-	public abstract ArrayList<Point> getPlannedPath();
+    public abstract int makeMove();
+
+    public abstract ArrayList<Point> getPlannedPath();
 }
 
 /*
