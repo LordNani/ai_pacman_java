@@ -1,0 +1,18 @@
+Average RAM: 20.3179MB
+Steps: 24
+Time: 3630 milliseconds
+Average RAM: 21.5902MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 22.5573MB
+Steps: 124
+Time: 18630 milliseconds
+Average RAM: 22.0029MB
+Steps: 107
+Time: 16080 milliseconds
+Average RAM: 22.2812MB
+Steps: 36
+Time: 5430 milliseconds
+Average RAM: 22.5575MB
+Steps: 136
+Time: 20430 milliseconds

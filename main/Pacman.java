@@ -121,29 +121,27 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
                         m.currDirection = m.logic.makeMove();
                         m.desiredPoint = m.moveInDirection(m.currDirection);
                         m.inAction = false;
+                        m.move();
+                        switch (sensor.checkWinOrLooseCondition(b.getGhosts(), b.player,b.totalPellets)){
+                            case 1:
+                                b.player.finished = true;
+                                System.out.println("!!!WIN!!!");
+                                break;
+                            case 2:
+                                b.player.finished = true;
+                                System.out.println("!!!LOST!!!");
+                                break;
+                        }
                     }
                 }
 //                b.plannedPath = b.player.logic.getPlannedPath();
                 System.out.println("Ghost "+b.ghosts.get(0).getGridPosition());
             }
-
-
-
-            for(Mover m : movers){
-                m.move();
-                switch (sensor.checkWinOrLooseCondition(b.getGhosts(), b.player,b.totalPellets)){
-                    case 1:
-                        b.player.finished = true;
-                        System.out.println("!!!WIN!!!");
-                        break;
-                    case 2:
-                        b.player.finished = true;
-                        System.out.println("!!!LOST!!!");
-                        break;
+            else{
+                for(Mover m : movers){
+                    m.move();
                 }
             }
-
-
 
             if (b.player.finished) {
                 b.newGame = 1;

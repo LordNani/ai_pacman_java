@@ -32,7 +32,7 @@ public class Sensor {
         for(Ghost ghost: ghosts){
             System.out.println("ghost pos: " + ghost.getGridPosition() );
 
-            if(ghost.getGridPosition() == player.getGridPosition())
+            if(ghost.getGridPosition().equals(player.getGridPosition()))
                 return 2;
         }
         System.out.println("player pos: " + player.getGridPosition() );
