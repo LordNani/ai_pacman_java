@@ -60,13 +60,18 @@ public class MinMaxVertex implements Cloneable{
 
 	@Override
 	public String toString(){
+		int length = calculateLength();
+		return ((max) ? "MAX " : "MIN ")+location.point.toString()+" length: "+length;
+	}
+
+	public int calculateLength() {
 		int length = 0;
 		MinMaxVertex c_father = getFather();
 		while(c_father!=null){
 			c_father = c_father.getFather();
 			++length;
 		}
-		return ((max) ? "MAX " : "MIN ")+location.point.toString()+" length: "+length;
+		return length;
 	}
 
 	public boolean isEvaluated() {
