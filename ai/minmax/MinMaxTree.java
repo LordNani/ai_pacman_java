@@ -140,10 +140,14 @@ public abstract class MinMaxTree {
 		for(int i=0; i<amount_of_steps; ++i){
 			MapTile next = vertex.getLocation();
 			path.add(next);
+			if(vertex.getChildren()==null) return path;
 			for(int j=0; j<allies_amount-1; ++j){
 				vertex = getMaxVertex(vertex.getChildren());
 			}
 			for(int j=0; j<enemies_amount; ++j){
+				if(vertex.getChildren()==null){
+					System.out.println("Empty list");
+				}
 				vertex = getMinVertex(vertex.getChildren());
 			}
 			vertex = getMaxVertex(vertex.getChildren());
