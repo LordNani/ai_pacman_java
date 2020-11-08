@@ -7,6 +7,7 @@ public class MinMaxVertex implements Cloneable{
 	private MinMaxVertex father;
 	private ArrayList<MinMaxVertex> children;
 	private double value;
+	public int length;
 	private MapTile location;
 
 	public MinMaxVertex(boolean max,
@@ -18,6 +19,7 @@ public class MinMaxVertex implements Cloneable{
 		this.children = children;
 		this.location = location;
 		this.value = Double.NaN;
+		length = (father==null) ? 0 : father.length+1;
 	}
 
 	void setValue(double value){this.value = value;}

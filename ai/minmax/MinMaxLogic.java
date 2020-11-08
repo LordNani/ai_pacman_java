@@ -2,6 +2,7 @@ package ai.minmax;
 
 import ai.Point;
 import main.Board;
+import main.Ghost;
 import main.Mover;
 import main.Player;
 
@@ -20,6 +21,19 @@ public abstract class MinMaxLogic {
 	public abstract int makeMove();
 
 	public abstract ArrayList<Point> getPlannedPath();
+
+	protected Ghost closestGhost(){
+		Ghost closest = board.getGhosts().get(0);
+		int min = mapGraph.shortestWay(mover.getGridPosition(), closest.getGridPosition()).size();
+		for(int i=1; i< board.getGhosts().size(); ++i){
+			int current_value = mapGraph.shortestWay(mover.getGridPosition(), board.getGhosts().get(i).getGridPosition()).size();
+			if(min>current_value){
+				min = current_value;
+				closest = board.getGhosts().get(i);
+			}
+		}
+		return closest;
+	}
 }
 
 /*

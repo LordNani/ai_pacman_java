@@ -18,10 +18,11 @@ public class PacmanLogic extends MinMaxLogic{
 
 	@Override
 	public int makeMove() {
+		Ghost closest = closestGhost();
 		PacmanMinMaxTree choice_tree = new PacmanMinMaxTree(mapGraph,
 				10,
 				mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
-				mapGraph.tiles[ghosts.get(0).getGridPosition().x][ghosts.get(0).getGridPosition().y],
+				mapGraph.tiles[closest.getGridPosition().x][closest.getGridPosition().y],
 				board.getPellets());
 		MinMaxVertex next_vertex = choice_tree.getBest();
 //		planned_path = createPlannedPath(next_vertex);
