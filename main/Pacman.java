@@ -21,15 +21,12 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     long timer = -1;
     int frameFreq = 30;
     int boardSize = 20;
-    enum algoritmType {DFS, BFS, Greedy, AStar}
-    int currentAlgoritm=0;
     /* framesPerMove defines how often pacman_logic should decide where to go */
     int framesPerMove = 5;
 
     /* Create a new board */
     Board b = new Board(boardSize);
-//    Sensor sensor;
-//    boolean isDFS = true;
+    Sensor sensor = new Sensor(boardSize);
     ArrayList<Mover> movers;
 
     /* This timer is used to do request new frames be drawn*/
@@ -129,53 +126,38 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 //                b.plannedPath = b.player.logic.getPlannedPath();
                 System.out.println("Ghost "+b.ghosts.get(0).getGridPosition());
             }
+
+
+
             for(Mover m : movers){
                 m.move();
+                switch (sensor.checkWinOrLooseCondition(b.getGhosts(), b.player,b.totalPellets)){
+                    case 1:
+                        b.player.finished = true;
+                        System.out.println("!!!WIN!!!");
+                        break;
+                    case 2:
+                        b.player.finished = true;
+                        System.out.println("!!!LOST!!!");
+                        break;
+                }
             }
-//            b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
+
+
 
             if (b.player.finished) {
-//                saveResults();
                 b.newGame = 1;
-//                System.out.println("!!!WIN!!!");
+                saveResults();
             }
-
 
         } else {
             /* We either have a new game or the user has died, either way we have to reset the board */
             /*Temporarily stop advancing frames */
             frameTimer.stop();
-//            sensor = new Sensor(boardSize);
-//            b.finishTile = sensor.getFinishLocation();
-            /* Advance a frame to display main state*/
             repaint(0, 0, 600, 600);
-            //Change algorithm on every game restart
-//            Algorithm algorithm;
-//            switch(currentAlgoritm){
-//                case 0: algorithm = new DFSAlgorithm(b.player.getGridPosition()); break;
-//                case 1: algorithm = new BFSAlgorithm(b.player.getGridPosition()); break;
-//                case 2: algorithm = new GreedyAlgorithm(
-//                        new VertexPoint(b.player.getGridPosition()),
-//                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
-//                ); break;
-//                default: algorithm = new AStarAlgorithm(
-//                        new VertexPoint(b.player.getGridPosition()),
-//                        new VertexPoint(b.player.toGridFormat(sensor.getFinishLocation()))
-//                ); break;
-//            }
-//            currentAlgoritm=(currentAlgoritm+1)%4;
-//            logic = new Logic(boardSize-1, b.player.getGridPosition(),algorithm);
-////            logic = isDFS ? new Logic(boardSize - 1, b.player.getGridPosition(),
-////                    new DFSAlgorithm(b.player.getGridPosition())) : new Logic(boardSize - 1, b.player.getGridPosition(),
-////                    new BFSAlgorithm(b.player.getGridPosition()));
-////            ;
-//            isDFS = !isDFS;
-
-
             b.newGame = 0;
             frameTimer.start();
         }
-
 
         repaint();
 

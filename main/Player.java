@@ -34,7 +34,11 @@ public class Player extends Mover {
 		return toGridFormat(current);
 	}
 
-//	/* The move function moves the pacman for one frame in non demo mode */
+	public int getCollectedPellets() {
+		return collectedPellets;
+	}
+
+	//	/* The move function moves the pacman for one frame in non demo mode */
 //	public void move() {
 //		++stableFCount;
 //
