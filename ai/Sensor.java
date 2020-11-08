@@ -1,4 +1,8 @@
 package ai;
+import main.Ghost;
+import main.Player;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Sensor {
@@ -18,4 +22,20 @@ public class Sensor {
         return pacmanPoint.equals(finishPoint);
     }
 
+
+    /*
+    1 - Won
+    2 - Lost
+    0 - continue playing
+     */
+    public int checkWinOrLooseCondition(ArrayList<Ghost> ghosts, Player player, int totalPoints){
+        for(Ghost ghost: ghosts){
+            System.out.println("ghost pos: " + ghost.getGridPosition() );
+
+            if(ghost.getGridPosition() == player.getGridPosition())
+                return 2;
+        }
+        System.out.println("player pos: " + player.getGridPosition() );
+        return player.getCollectedPellets() >= totalPoints? 1: 0;
+    }
 }

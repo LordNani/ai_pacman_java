@@ -45,7 +45,6 @@ public class Board extends JPanel {
     int offset = 20;
 
     boolean[][] traversedTiles;
-    Point finishTile = new Point();
     boolean pellets[][];
     /* State flags*/
     boolean titleScreen;
@@ -297,8 +296,6 @@ public class Board extends JPanel {
         g.fillRect(280, 320, 20, 40);
         g.fillRect(120, 320, 20, 60);
 
-        g.setColor(Color.GREEN);
-        g.fillRect(gridSize + finishTile.x,gridSize + finishTile.y  ,gridSize,gridSize);
 
 
     }
