@@ -366,11 +366,12 @@ public class Board extends JPanel {
     }
 
     private void drawGhost(Ghost ghost, Graphics g) {
-        if(ghost.frameCount<1){
-            g.drawImage(ghost.img, ghost.current.x, ghost.current.y,null);
-        }
-        if (ghost.frameCount >= 3)
-            ghost.frameCount = 0;
+        g.drawImage(ghost.img, ghost.current.x, ghost.current.y,null);
+//        if(ghost.frameCount<1){
+//
+//        }
+//        else if (ghost.frameCount >= 3)
+//            ghost.frameCount = 0;
     }
 
     public void paint(Graphics g) {
@@ -400,7 +401,7 @@ public class Board extends JPanel {
         }
 
         drawBoard(g);
-        drawPlanned(g);
+//        drawPlanned(g);
         drawPellets(g);
         drawPacman(g);
         drawGhosts(g);

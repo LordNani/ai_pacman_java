@@ -28,8 +28,8 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
     /* Create a new board */
     Board b = new Board(boardSize);
-    Sensor sensor;
-    boolean isDFS = true;
+//    Sensor sensor;
+//    boolean isDFS = true;
     ArrayList<Mover> movers;
 
     /* This timer is used to do request new frames be drawn*/
@@ -84,13 +84,13 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
        Namely the area around every player ghost and the menu bars
     */
     public void repaint() {
-//        b.repaint(0, 0, 600, 20);
-//        b.repaint(0, 420, 600, 40);
-//        b.repaint(b.player.current.x - boardSize, b.player.current.y - boardSize, boardSize * 4, boardSize * 4);
-//        for(Ghost g : b.ghosts){
-//            b.repaint(g.current.x - boardSize, g.current.y - boardSize, boardSize * 4, boardSize * 4);
-//        }
-        b.repaint(0, 0, 600, 600);
+        b.repaint(0, 0, 600, 20);
+        b.repaint(0, 420, 600, 40);
+        b.repaint(b.player.current.x - boardSize, b.player.current.y - boardSize, boardSize * 4, boardSize * 4);
+        for(Ghost g : b.ghosts){
+            b.repaint(g.current.x - boardSize, g.current.y - boardSize, boardSize * 4, boardSize * 4);
+        }
+//        b.repaint(0, 0, 600, 600);
     }
 
     /* Steps the screen forward one frame */
@@ -134,7 +134,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 //            b.player.finished = sensor.isOnFinish(b.player.current.x, b.player.current.y, b.gridSize);
 
             if (b.player.finished) {
-                saveResults();
+//                saveResults();
                 b.newGame = 1;
 //                System.out.println("!!!WIN!!!");
             }
@@ -144,8 +144,8 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             /* We either have a new game or the user has died, either way we have to reset the board */
             /*Temporarily stop advancing frames */
             frameTimer.stop();
-            sensor = new Sensor(boardSize);
-            b.finishTile = sensor.getFinishLocation();
+//            sensor = new Sensor(boardSize);
+//            b.finishTile = sensor.getFinishLocation();
             /* Advance a frame to display main state*/
             repaint(0, 0, 600, 600);
             //Change algorithm on every game restart
@@ -186,8 +186,8 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
         try {
             StringBuffer sb = new StringBuffer();
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, true));
-            String title = !isDFS ? "\n=======DFS TEST RESULT=======\n" : "\n=======BFS TEST RESULT=======\n";
-            sb.append(title);
+//            String title = !isDFS ? "\n=======DFS TEST RESULT=======\n" : "\n=======BFS TEST RESULT=======\n";
+//            sb.append(title);
             sb.append("Average RAM: " + Logic.averageRAM + "MB\n");
             sb.append("Steps: " + b.player.stableFCount / framesPerMove + "\n");
             sb.append("Time: " + b.player.stableFCount * frameFreq + " milliseconds\n");
