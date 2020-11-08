@@ -145,7 +145,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
             if (b.player.finished) {
                 b.newGame = 1;
-                saveResults();
+//                saveResults();
             }
 
         } else {
