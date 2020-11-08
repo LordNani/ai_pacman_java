@@ -169,8 +169,8 @@ public abstract class MinMaxTree {
 	}
 
 	private MinMaxVertex getMinVertex(ArrayList<MinMaxVertex> children) {
-		MinMaxVertex best_vertex = null;
-		double min = 10000001;
+		MinMaxVertex best_vertex = children.get(0);
+		double min = children.get(0).getValue();
 		for(MinMaxVertex v : children){
 			if(min > v.getValue()){
 				min = v.getValue();
@@ -181,8 +181,8 @@ public abstract class MinMaxTree {
 	}
 
 	private MinMaxVertex getMaxVertex(ArrayList<MinMaxVertex> children) {
-		MinMaxVertex best_vertex = null;
-		double max = -10000001;
+		MinMaxVertex best_vertex = children.get(0);
+		double max = children.get(0).getValue();
 		for(MinMaxVertex v : children){
 			if(max<v.getValue()){
 				max = v.getValue();

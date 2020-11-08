@@ -16,3 +16,132 @@ Time: 5430 milliseconds
 Average RAM: 22.5575MB
 Steps: 136
 Time: 20430 milliseconds
+Average RAM: 20.428MB
+Steps: 24
+Time: 3630 milliseconds
+Average RAM: 22.06MB
+Steps: 23
+Time: 3480 milliseconds
+Average RAM: 22.5053MB
+Steps: 34
+Time: 5130 milliseconds
+Average RAM: 22.627MB
+Steps: 33
+Time: 4980 milliseconds
+Average RAM: 23.1248MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 21.8781MB
+Steps: 25
+Time: 3780 milliseconds
+Average RAM: 22.6007MB
+Steps: 94
+Time: 14130 milliseconds
+Average RAM: 23.1787MB
+Steps: 25
+Time: 3780 milliseconds
+Average RAM: 22.6086MB
+Steps: 28
+Time: 4230 milliseconds
+Average RAM: 22.6453MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 21.9618MB
+Steps: 40
+Time: 6030 milliseconds
+Average RAM: 22.4201MB
+Steps: 35
+Time: 5280 milliseconds
+Average RAM: 22.6839MB
+Steps: 33
+Time: 4980 milliseconds
+Average RAM: 22.2866MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 22.7458MB
+Steps: 57
+Time: 8580 milliseconds
+Average RAM: 22.5959MB
+Steps: 68
+Time: 10230 milliseconds
+Average RAM: 23.4734MB
+Steps: 22
+Time: 3330 milliseconds
+Average RAM: 21.6748MB
+Steps: 24
+Time: 3630 milliseconds
+Average RAM: 22.7171MB
+Steps: 23
+Time: 3480 milliseconds
+Average RAM: 20.8239MB
+Steps: 24
+Time: 3630 milliseconds
+Average RAM: 21.6979MB
+Steps: 35
+Time: 5280 milliseconds
+Average RAM: 22.3187MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 23.2294MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 22.2118MB
+Steps: 40
+Time: 6030 milliseconds
+Average RAM: 23.1629MB
+Steps: 33
+Time: 4980 milliseconds
+Average RAM: 21.5541MB
+Steps: 25
+Time: 3780 milliseconds
+Average RAM: 22.7778MB
+Steps: 76
+Time: 11430 milliseconds
+Average RAM: 23.1544MB
+Steps: 24
+Time: 3630 milliseconds
+Average RAM: 22.6493MB
+Steps: 126
+Time: 18930 milliseconds
+Average RAM: 23.3573MB
+Steps: 24
+Time: 3630 milliseconds
+Average RAM: 22.5972MB
+Steps: 76
+Time: 11430 milliseconds
+Average RAM: 21.4736MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 22.6343MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 22.866MB
+Steps: 31
+Time: 4680 milliseconds
+Average RAM: 22.2519MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 22.5013MB
+Steps: 26
+Time: 3930 milliseconds
+Average RAM: 22.8184MB
+Steps: 43
+Time: 6480 milliseconds
+Average RAM: 22.543MB
+Steps: 145
+Time: 21780 milliseconds
+Average RAM: 22.3114MB
+Steps: 33
+Time: 4980 milliseconds
+Average RAM: 23.0728MB
+Steps: 28
+Time: 4230 milliseconds
+Average RAM: 22.5697MB
+Steps: 94
+Time: 14130 milliseconds
+Average RAM: 23.5603MB
+Steps: 28
+Time: 4230 milliseconds
+Average RAM: 22.1942MB
+Steps: 28
+Time: 4230 milliseconds
