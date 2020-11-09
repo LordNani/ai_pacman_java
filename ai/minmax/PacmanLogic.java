@@ -9,22 +9,22 @@ import java.util.ArrayList;
 
 public class PacmanLogic extends MinMaxLogic {
     ArrayList<Ghost> ghosts;
-    ArrayList<Point> planned_path;
 
     public PacmanLogic(Player mover, Board board) {
         super(mover, board);
         ghosts = board.getGhosts();
     }
 
-    @Override
-    public int makeMove() {
-        PacmanMinMaxTree choice_tree = new PacmanMinMaxTree(mapGraph,
-                10,
-                mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
-                mapGraph.tiles[ghosts.get(0).getGridPosition().x][ghosts.get(0).getGridPosition().y],
-                board.getPellets());
-        MinMaxVertex next_vertex = choice_tree.getBest();
-//		planned_path = createPlannedPath(next_vertex);
+	@Override
+	public int makeMove() {
+		Ghost closest = closestGhost();
+		PacmanMinMaxTree choice_tree = new PacmanMinMaxTree(mapGraph,
+				10,
+				mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
+				mapGraph.tiles[closest.getGridPosition().x][closest.getGridPosition().y],
+				board.getPellets());
+		MinMaxVertex next_vertex = choice_tree.getBest();
+
         return mover.getGridPosition().directionTo(next_vertex.getLocation().point);
     }
 

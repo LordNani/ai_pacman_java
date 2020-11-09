@@ -2,24 +2,38 @@ package ai.minmax;
 
 import ai.Point;
 import main.Board;
+import main.Ghost;
 import main.Mover;
 
 import java.util.ArrayList;
 
 public abstract class MinMaxLogic {
-    MapGraph mapGraph;
-    Mover mover;
-    Board board;
+	MapGraph mapGraph;
+	Mover mover;
+	Board board;
+	public MinMaxLogic(Mover mover, Board board){
+		this.board=board;
+		this.mover=mover;
+		this.mapGraph=new MapGraph(board.state);
+	}
 
-    public MinMaxLogic(Mover mover, Board board) {
-        this.board = board;
-        this.mover = mover;
-        this.mapGraph = new MapGraph(board.state);
-    }
+	public abstract int makeMove();
 
-    public abstract int makeMove();
+	public abstract ArrayList<Point> getPlannedPath();
 
-    public abstract ArrayList<Point> getPlannedPath();
+	protected Ghost closestGhost(){
+		Ghost closest = board.getGhosts().get(0);
+		int min = mapGraph.shortestWay(mover.getGridPosition(), closest.getGridPosition()).size();
+		for(int i=1; i< board.getGhosts().size(); ++i){
+			int current_value = mapGraph.shortestWay(mover.getGridPosition(), board.getGhosts().get(i).getGridPosition()).size();
+			if(min>current_value){
+				min = current_value;
+				closest = board.getGhosts().get(i);
+			}
+		}
+		return closest;
+	}
+
 }
 
 /*
