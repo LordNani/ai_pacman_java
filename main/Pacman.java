@@ -1,15 +1,16 @@
 package main;/* Drew Schuster */
 
-import ai.*;
-import ai.minmax.*;
+import ai.Logic;
+import ai.Sensor;
+import ai.minmax.GhostLogic;
+import ai.minmax.PacmanLogic;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.lang.*;
 import java.util.ArrayList;
 
 /* This class contains the entire game... most of the game logic is in the main.Board class but this
@@ -62,11 +63,11 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
             }
         });
 
-        movers = new ArrayList<>(b.ghosts.size()+1);
+        movers = new ArrayList<>(b.ghosts.size() + 1);
         movers.add(b.player);
 
         b.player.logic = new PacmanLogic(b.player, b);
-        for(Ghost g : b.ghosts){
+        for (Ghost g : b.ghosts) {
             g.logic = new GhostLogic(g, b);
             movers.add(g);
         }
@@ -84,7 +85,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
         b.repaint(0, 0, 600, 20);
         b.repaint(0, 420, 600, 40);
         b.repaint(b.player.current.x - boardSize, b.player.current.y - boardSize, boardSize * 4, boardSize * 4);
-        for(Ghost g : b.ghosts){
+        for (Ghost g : b.ghosts) {
             b.repaint(g.current.x - boardSize, g.current.y - boardSize, boardSize * 4, boardSize * 4);
         }
 //        b.repaint(0, 0, 600, 600);
@@ -115,14 +116,14 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
         /* If we have a normal game state, move all pieces and update pellet status */
         if (b.newGame == 0) {
             if (b.player.stableFCount % framesPerMove == 0) {
-                for(Mover m : movers){
-                    if(!m.inAction){
+                for (Mover m : movers) {
+                    if (!m.inAction) {
                         m.inAction = true;
                         m.currDirection = m.logic.makeMove();
                         m.desiredPoint = m.moveInDirection(m.currDirection);
                         m.inAction = false;
                         m.move();
-                        switch (sensor.checkWinOrLooseCondition(b.getGhosts(), b.player,b.totalPellets)){
+                        switch (sensor.checkWinOrLooseCondition(b.getGhosts(), b.player, b.totalPellets)) {
                             case 1:
                                 b.player.finished = true;
                                 System.out.println("!!!WIN!!!");
@@ -135,10 +136,9 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
                     }
                 }
 //                b.plannedPath = b.player.logic.getPlannedPath();
-                System.out.println("Ghost "+b.ghosts.get(0).getGridPosition());
-            }
-            else{
-                for(Mover m : movers){
+                System.out.println("Ghost " + b.ghosts.get(0).getGridPosition());
+            } else {
+                for (Mover m : movers) {
                     m.move();
                 }
             }
@@ -161,7 +161,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
     }
 
-    private void saveResults(){
+    private void saveResults() {
         File file = new File("logs.txt");
 
         try {
@@ -223,7 +223,6 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 
     /* Main function simply creates a new pacman instance*/
     public static void main(String[] args) {
-
         new Pacman().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }

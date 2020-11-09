@@ -1,6 +1,5 @@
 package ai;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -53,7 +52,7 @@ public class Logic {
     }
 
     private void getNextPoint() {
-        if(a instanceof AwareAlgorithm){
+        if (a instanceof AwareAlgorithm) {
 //            System.out.println("aware");
             ((AwareAlgorithm) a).updatePosition(position);
         }
@@ -121,10 +120,9 @@ public class Logic {
                 --res_pos.x;
                 break;
         }
-        if(!res_pos.path.isEmpty() && Math.abs(res_pos.path.getLast()-currDirection)==2){
+        if (!res_pos.path.isEmpty() && Math.abs(res_pos.path.getLast() - currDirection) == 2) {
             res_pos.path.removeLast();
-        }
-        else res_pos.path.addLast(currDirection);
+        } else res_pos.path.addLast(currDirection);
         return res_pos;
     }
 
@@ -135,11 +133,11 @@ public class Logic {
         final double totalMemory = Runtime.getRuntime().totalMemory();
         final double freeMemory = Runtime.getRuntime().freeMemory();
         if (ramCounter == 0) {
-            averageRAM =  (totalMemory - freeMemory) / 1024 / 1024;
+            averageRAM = (totalMemory - freeMemory) / 1024 / 1024;
 
         } else {
             averageRAM = ((totalMemory - freeMemory) / 1024 / 1024 + averageRAM * ramCounter) / (ramCounter + 1);
-            averageRAM = Math.round(averageRAM*10000.0)/10000.0;
+            averageRAM = Math.round(averageRAM * 10000.0) / 10000.0;
         }
         ++ramCounter;
 

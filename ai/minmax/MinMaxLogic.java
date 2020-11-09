@@ -4,7 +4,6 @@ import ai.Point;
 import main.Board;
 import main.Ghost;
 import main.Mover;
-import main.Player;
 
 import java.util.ArrayList;
 
@@ -34,6 +33,7 @@ public abstract class MinMaxLogic {
 		}
 		return closest;
 	}
+
 }
 
 /*
