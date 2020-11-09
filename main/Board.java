@@ -1,10 +1,13 @@
 package main;/* Drew Schuster */
 
 import ai.Point;
+import ai.minmax.PacmanLogic;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import static main.MapParser.getMapFromFile;
 
@@ -178,6 +181,12 @@ public class Board extends JPanel {
     }
 
     private void drawPlanned(Graphics g) {
+//        Iterator it = ((PacmanLogic)player.logic).coordinates.entrySet().iterator();
+//        while (it.hasNext()) {
+//            Map.Entry pair = (Map.Entry)it.next();
+//            System.out.println(pair.getKey() + " = " + pair.getValue());
+//            it.remove(); // avoids a ConcurrentModificationException
+//        }
     }
 
     private void drawPacman(Graphics g) {

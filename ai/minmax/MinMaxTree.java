@@ -1,8 +1,10 @@
 package ai.minmax;
 
 import ai.Point;
+import main.Board;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public abstract class MinMaxTree {
@@ -11,10 +13,10 @@ public abstract class MinMaxTree {
     int depth;
     int allies_amount;
     int enemies_amount;
-    ArrayList<Point> targets;
+    Board board;
 
-    public MinMaxTree(MapGraph mapGraph, int depth, MapTile location, MapTile enemy_location, ArrayList<Point> targets) {
-        this.targets = targets;
+    public MinMaxTree(MapGraph mapGraph, int depth, MapTile location, MapTile enemy_location, Board board) {
+        this.board = board;
         allies_amount = 1;
         enemies_amount = 1;
         this.mapGraph = mapGraph;
@@ -130,6 +132,20 @@ public abstract class MinMaxTree {
         return result;
     }
 
+    protected double evaluate(MinMaxVertex vertex) {
+        if (vertex == null) {
+            System.out.println("Bug here");
+        }
+
+        if (vertex.isEvaluated()) return vertex.getValue();
+        if (vertex.getChildren() == null || vertex.getChildren().isEmpty())
+            return evaluateSituation(vertex.getFather(), vertex);
+        for (MinMaxVertex child : vertex.getChildren())
+            child.setValue(evaluate(child));
+        if (vertex.isMax()) return getMaxVertex(vertex.getChildren()).getValue();
+        else return getMinVertex(vertex.getChildren()).getValue();
+    }
+
     MinMaxVertex getBest() {
         evaluate(root);
         MinMaxVertex last_enemy_vertex = root;
@@ -158,23 +174,9 @@ public abstract class MinMaxTree {
             vertex = getMaxVertex(vertex.getChildren());
         }
         return path;
-    }
+}
 
-    private double evaluate(MinMaxVertex vertex) {
-        if (vertex == null) {
-            System.out.println("Bug here");
-        }
-
-        if (vertex.isEvaluated()) return vertex.getValue();
-        if (vertex.getChildren() == null || vertex.getChildren().isEmpty())
-            return evaluateSituation(vertex.getFather(), vertex);
-        for (MinMaxVertex child : vertex.getChildren())
-            child.setValue(evaluate(child));
-        if (vertex.isMax()) return getMaxVertex(vertex.getChildren()).getValue();
-        else return getMinVertex(vertex.getChildren()).getValue();
-    }
-
-    private MinMaxVertex getMinVertex(ArrayList<MinMaxVertex> children) {
+    protected MinMaxVertex getMinVertex(ArrayList<MinMaxVertex> children) {
         MinMaxVertex best_vertex = null;
         double min = Double.POSITIVE_INFINITY;
         for (MinMaxVertex v : children) {
@@ -186,7 +188,7 @@ public abstract class MinMaxTree {
         return best_vertex;
     }
 
-    private MinMaxVertex getMaxVertex(ArrayList<MinMaxVertex> children) {
+    protected MinMaxVertex getMaxVertex(ArrayList<MinMaxVertex> children) {
         MinMaxVertex best_vertex = null;
         double max = Double.NEGATIVE_INFINITY;
         for (MinMaxVertex v : children) {
@@ -209,7 +211,7 @@ public abstract class MinMaxTree {
         int collected_pellets = 0;
         MinMaxVertex vertex = agent;
         while(vertex!=null){
-            if(targets.contains(vertex.getLocation().point)){
+            if(board.getPellets().contains(vertex.getLocation().point)){
                 collected_pellets++;
             }
             if(vertex.length<2) break;
@@ -218,4 +220,13 @@ public abstract class MinMaxTree {
         return collected_pellets;
     }
 
+    protected int squaredDistanceToClosestPellet(MapTile point) {
+        ArrayList<Point> targets = board.getPellets();
+        int min = targets.get(0).squaredDistance(point.point);
+        for(int i=1; i<targets.size(); ++i){
+            int current = targets.get(i).squaredDistance(point.point);
+            min = Math.min(min, current);
+        }
+        return min;
+    }
 }

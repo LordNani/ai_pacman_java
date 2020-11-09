@@ -6,10 +6,10 @@ import main.Ghost;
 import main.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PacmanLogic extends MinMaxLogic {
     ArrayList<Ghost> ghosts;
-
     public PacmanLogic(Player mover, Board board) {
         super(mover, board);
         ghosts = board.getGhosts();
@@ -19,12 +19,11 @@ public class PacmanLogic extends MinMaxLogic {
 	public int makeMove() {
 		Ghost closest = closestGhost();
 		PacmanMinMaxTree choice_tree = new PacmanMinMaxTree(mapGraph,
-				10,
+				5,
 				mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
 				mapGraph.tiles[closest.getGridPosition().x][closest.getGridPosition().y],
-				board.getPellets());
+				board);
 		MinMaxVertex next_vertex = choice_tree.getBest();
-
         return mover.getGridPosition().directionTo(next_vertex.getLocation().point);
     }
 

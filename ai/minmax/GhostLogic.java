@@ -25,7 +25,7 @@ public class GhostLogic extends MinMaxLogic {
                     depth,
                     mapGraph.tiles[mover.getGridPosition().x][mover.getGridPosition().y],
                     mapGraph.tiles[pacman.getGridPosition().x][pacman.getGridPosition().y],
-                    board.getPellets());
+                    board);
             current_path = choice_tree.getBest(1 + (int) (4 * Math.random()));
         }
         return mover.getGridPosition().directionTo(current_path.removeFirst().point);
