@@ -1,20 +1,22 @@
 package ai.minmax;
 
-public class GhostMinMaxTree extends MinMaxTree {
-    MapTile location;
-    MapTile enemy_location;
+import ai.Point;
 
-    public GhostMinMaxTree(MapGraph mapGraph, int depth, MapTile location, MapTile enemy_location) {
-        super(mapGraph, depth, location, enemy_location);
-        this.location = location;
-        this.enemy_location = enemy_location;
+import java.util.ArrayList;
+
+public class GhostMinMaxTree extends MinMaxTree {
+    public GhostMinMaxTree(MapGraph mapGraph, int depth, MapTile location, MapTile enemy_location, ArrayList<Point> targets) {
+        super(mapGraph, depth, location, enemy_location, targets);
     }
 
     @Override
-    protected double getCollisionValue(MinMaxVertex agent) {
-        return 10000000;
+    protected double getCollisionValue(MinMaxVertex agent_from_some_side) {
+        MinMaxVertex agent_from_other_side = agent_from_some_side.getFather();
+        MinMaxVertex pacman_agent = (agent_from_some_side.length%2==1) ? agent_from_some_side : agent_from_other_side;
+        int collected_pellets = amountCollected(pacman_agent);
+        if(collected_pellets==targets.size()) return -10000000;
+        else return 10000000;
     }
-
     @Override
     protected double evaluateSituation(MinMaxVertex agent, MinMaxVertex enemy) {
         double distance = (double) mapGraph.shortestWay(agent.getLocation(), enemy.getLocation()).size();

@@ -117,7 +117,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
         if (b.newGame == 0) {
             if (b.player.stableFCount % framesPerMove == 0) {
                 for (Mover m : movers) {
-                    if (!m.inAction) {
+                    if (!m.inAction && !b.player.finished) {
                         m.inAction = true;
                         m.currDirection = m.logic.makeMove();
                         m.desiredPoint = m.moveInDirection(m.currDirection);
@@ -133,19 +133,17 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
                                 System.out.println("!!!LOST!!!");
                                 break;
                         }
+                        if (b.player.finished) {
+                            b.newGame = 1;
+                        }
                     }
                 }
 //                b.plannedPath = b.player.logic.getPlannedPath();
-                System.out.println("Ghost " + b.ghosts.get(0).getGridPosition());
+//                System.out.println("Ghost " + b.ghosts.get(0).getGridPosition());
             } else {
                 for (Mover m : movers) {
                     m.move();
                 }
-            }
-
-            if (b.player.finished) {
-                b.newGame = 1;
-//                saveResults();
             }
 
         } else {

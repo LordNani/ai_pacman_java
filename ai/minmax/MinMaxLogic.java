@@ -19,8 +19,6 @@ public abstract class MinMaxLogic {
 
 	public abstract int makeMove();
 
-	public abstract ArrayList<Point> getPlannedPath();
-
 	protected Ghost closestGhost(){
 		Ghost closest = board.getGhosts().get(0);
 		int min = mapGraph.shortestWay(mover.getGridPosition(), closest.getGridPosition()).size();

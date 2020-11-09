@@ -47,9 +47,4 @@ public class PacmanLogic extends MinMaxLogic {
         }
         return path;
     }
-
-    @Override
-    public ArrayList<Point> getPlannedPath() {
-        return planned_path;
-    }
 }
