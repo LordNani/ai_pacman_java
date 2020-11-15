@@ -1,6 +1,7 @@
 package main;/* Drew Schuster */
 
 import ai.Point;
+import ai.minmax.GhostLogic;
 import ai.minmax.PacmanLogic;
 
 import javax.swing.*;
@@ -56,20 +57,18 @@ public class Board extends JPanel {
     /* This is the font used for the menus */
     Font font = new Font("Monospaced", Font.BOLD, 12);
     private ai.Point possible_next_point;
+    String map_path;
+    public ArrayList<Mover> movers;
 
     /* Constructor initializes state flags etc.*/
     public Board(int boardSize) {
-
+        map_path = Pacman.level_maps[Pacman.level];
         sounds = new GameSounds();
         gridSize = boardSize;
         newGame = 0;
         titleScreen = true;
         traversedTiles = new boolean[gridSize][gridSize];
         pellets = new boolean[gridSize][gridSize];
-        ghosts.add(new Ghost(180, 180, ghostImage1));
-        ghosts.add(new Ghost(200, 180, ghostImage2));
-        ghosts.add(new Ghost(220, 180, ghostImage3));
-        map = getMapFromFile("first.txt");
 //        ghosts.add(new Ghost(220,180,ghostImage4));
         reset();
     }
@@ -87,6 +86,8 @@ public class Board extends JPanel {
 
     /* Reset occurs on a new game*/
     public void reset() {
+        map = getMapFromFile(map_path);
+
         state = new boolean[gridSize - 1][gridSize - 1];
         /* Clear state and pellets arrays */
         for (int i = 0; i < state.length; i++) {
@@ -109,20 +110,37 @@ public class Board extends JPanel {
             }
         }
 
-//        plannedPoint = new Point();
-        plannedPath = new ArrayList<>();
-        player.resetPlayer(200, 300);
-        ghosts.get(0).resetGhost(180, 180);
-        ghosts.get(1).resetGhost(200, 180);
-        ghosts.get(2).resetGhost(220, 180);
         updateStateAccordingToMap();
+//        plannedPoint = new Point();
+        ghosts = new ArrayList<>();
+        switch(map_path){
+            case "heart.map":
+                player.resetPlayer(200, 300);
+//                ghosts.add(new Ghost(180, 200, ghostImage1));
+                ghosts.add(new Ghost(200, 200, ghostImage2));
+//                ghosts.add(new Ghost(220, 200, ghostImage3));
+//                pellets[9][8] = false;
+//                pellets[8][9] = false;
+                pellets[9][9] = false;
+//                pellets[10][9] = false;
+                break;
+            case "first.txt":
+                player.resetPlayer(200, 300);
+                ghosts.add(new Ghost(180, 180, ghostImage1));
+//                ghosts.add(new Ghost(200, 180, ghostImage2));
+                ghosts.add(new Ghost(220, 180, ghostImage3));
+                pellets[9][7] = false;
+                pellets[8][8] = false;
+                pellets[9][8] = false;
+                pellets[10][8] = false;
+                break;
+
+        }
+        plannedPath = new ArrayList<>();
 
         //Resetting total pellet counter
         totalPellets = 0;
-        pellets[9][7] = false;
-        pellets[8][8] = false;
-        pellets[9][8] = false;
-        pellets[10][8] = false;
+
 
         for (int i = 0; i < pellets.length; i++)
             for (int j = 0; j < pellets.length; j++)
@@ -254,6 +272,14 @@ public class Board extends JPanel {
             player.updateState(state);
             for (Ghost ghost : ghosts) {
                 ghost.updateState(state);
+            }
+            movers = new ArrayList<>(ghosts.size() + 1);
+            movers.add(player);
+
+            player.logic = new PacmanLogic(player, this);
+            for (Ghost ghost : ghosts) {
+                ghost.logic = new GhostLogic(ghost, this);
+                movers.add(ghost);
             }
         }
 

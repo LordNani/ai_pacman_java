@@ -24,11 +24,11 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     int boardSize = 20;
     /* framesPerMove defines how often pacman_logic should decide where to go */
     int framesPerMove = 5;
-
+    public static int level = 0;
+    public final static String[] level_maps = new String[]{"heart.map","first.txt"};
     /* Create a new board */
     Board b = new Board(boardSize);
     Sensor sensor = new Sensor(boardSize);
-    ArrayList<Mover> movers;
 
     /* This timer is used to do request new frames be drawn*/
     javax.swing.Timer frameTimer;
@@ -62,15 +62,6 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
                 stepFrame();
             }
         });
-
-        movers = new ArrayList<>(b.ghosts.size() + 1);
-        movers.add(b.player);
-
-        b.player.logic = new PacmanLogic(b.player, b);
-        for (Ghost g : b.ghosts) {
-            g.logic = new GhostLogic(g, b);
-            movers.add(g);
-        }
 
         /* Start the timer */
         frameTimer.start();
@@ -116,7 +107,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
         /* If we have a normal game state, move all pieces and update pellet status */
         if (b.newGame == 0) {
             if (b.player.stableFCount % framesPerMove == 0) {
-                for (Mover m : movers) {
+                for (Mover m : b.movers) {
                     if (!m.inAction && !b.player.finished) {
                         m.inAction = true;
                         m.currDirection = m.logic.makeMove();
@@ -128,12 +119,14 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
                                 b.player.finished = true;
                                 System.out.println("!!!WIN!!!");
                                 b.newGame = 1;
+                                b.map_path = Pacman.level_maps[(++Pacman.level)%2];
                                 break;
                             }
                             else if(game_result==2){
                                 b.player.finished = true;
                                 System.out.println("!!!LOST!!!");
                                 b.newGame = 1;
+                                b.map_path = Pacman.level_maps[(++Pacman.level)%2];
                                 break;
                             }
 //                        if (b.player.finished) {
@@ -144,7 +137,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
 //                b.plannedPath = b.player.logic.getPlannedPath();
 //                System.out.println("Ghost " + b.ghosts.get(0).getGridPosition());
             } else {
-                for (Mover m : movers) {
+                for (Mover m : b.movers) {
                     m.move();
                 }
             }
