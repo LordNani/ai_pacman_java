@@ -114,7 +114,7 @@ public class Board extends JPanel {
 //        plannedPoint = new Point();
         ghosts = new ArrayList<>();
         switch(map_path){
-            case "heart.map":
+            case "level_3.map":
                 player.resetPlayer(200, 300);
 //                ghosts.add(new Ghost(180, 200, ghostImage1));
                 ghosts.add(new Ghost(200, 200, ghostImage2));

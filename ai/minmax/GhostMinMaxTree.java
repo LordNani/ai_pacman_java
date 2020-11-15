@@ -21,6 +21,13 @@ public class GhostMinMaxTree extends MinMaxTree {
     @Override
     protected double evaluateSituation(MinMaxVertex agent, MinMaxVertex enemy) {
         double distance = (double) mapGraph.shortestWay(agent.getLocation(), enemy.getLocation()).size();
-        return -1 * distance;
+        MinMaxVertex pacman_agent = (agent.length%2==1) ? agent : enemy;
+        double collected_pellets = amountCollected(pacman_agent);
+        if(collected_pellets==(double)(board.getPellets().size())) return -10000000;
+        if(collected_pellets==0.0){
+            collected_pellets = 1.0/(super.distanceToClosestPellet(pacman_agent.getLocation())+0.000001);
+        }
+        if(distance==0.0) return 10000000;
+        return -1 * (distance+collected_pellets);
     }
 }

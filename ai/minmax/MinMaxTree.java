@@ -5,6 +5,7 @@ import main.Board;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public abstract class MinMaxTree {
@@ -118,10 +119,12 @@ public abstract class MinMaxTree {
 
     private ArrayList<MinMaxVertex> addChildrenByFather(MinMaxVertex enemy_move, boolean max) {
         ArrayList<MinMaxVertex> result = new ArrayList<>(4);
-        MapTile location_of_previous = (enemy_move.getFather().getFather() != null && enemy_move.getFather().getFather().getFather() != null) ?
-                enemy_move.getFather().getFather().getFather().getLocation() : null;
+//        MapTile location_of_previous = (enemy_move.getFather().getFather() != null && enemy_move.getFather().getFather().getFather() != null) ?
+//                enemy_move.getFather().getFather().getFather().getLocation() : null;
         for (MapTile neighbour_of_father : enemy_move.getFather().getLocation().neighbours) {
-            if (neighbour_of_father != null && !neighbour_of_father.equals(location_of_previous)) {
+            if (neighbour_of_father != null
+//                    && !neighbour_of_father.equals(location_of_previous)
+            ) {
                 MinMaxVertex new_vertex = new MinMaxVertex(max, enemy_move, null, neighbour_of_father);
                 result.add(new_vertex);
                 if (neighbour_of_father.equals(enemy_move.getLocation()))
@@ -208,10 +211,13 @@ public abstract class MinMaxTree {
     protected abstract double evaluateSituation(MinMaxVertex agent, MinMaxVertex enemy);
 
     protected int amountCollected(MinMaxVertex agent) {
+        HashSet<Point> used = new HashSet<>();
         int collected_pellets = 0;
+        ArrayList<Point> targets = board.getPellets();
         MinMaxVertex vertex = agent;
         while(vertex!=null){
-            if(board.getPellets().contains(vertex.getLocation().point)){
+            if(targets.contains(vertex.getLocation().point) && !used.contains(vertex.getLocation().point)){
+                used.add(vertex.getLocation().point);
                 collected_pellets++;
             }
             if(vertex.length<2) break;
@@ -220,8 +226,22 @@ public abstract class MinMaxTree {
         return collected_pellets;
     }
 
-    protected int squaredDistanceToClosestPellet(MapTile point) {
+    protected int shortestDistanceToClosestPellet(MapTile point,  ArrayList<Point> targets) {
+        int min = mapGraph.shortestWay(targets.get(0), point.point).size();
+        for(int i=1; i<targets.size(); ++i){
+            int current = mapGraph.shortestWay(targets.get(i), point.point).size();
+            min = Math.min(min, current);
+        }
+        return min;
+    }
+
+    protected int distanceToClosestPellet(MapTile point){
         ArrayList<Point> targets = board.getPellets();
+        if(targets.size()>10) return squaredDistanceToClosestPellet(point, targets);
+        else return shortestDistanceToClosestPellet(point, targets);
+    }
+
+    protected int squaredDistanceToClosestPellet(MapTile point,  ArrayList<Point> targets) {
         int min = targets.get(0).squaredDistance(point.point);
         for(int i=1; i<targets.size(); ++i){
             int current = targets.get(i).squaredDistance(point.point);

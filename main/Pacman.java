@@ -25,7 +25,7 @@ public class Pacman extends JFrame implements MouseListener, KeyListener {
     /* framesPerMove defines how often pacman_logic should decide where to go */
     int framesPerMove = 5;
     public static int level = 0;
-    public final static String[] level_maps = new String[]{"heart.map","first.txt"};
+    public final static String[] level_maps = new String[]{"level_3.map","first.txt"};
     /* Create a new board */
     Board b = new Board(boardSize);
     Sensor sensor = new Sensor(boardSize);

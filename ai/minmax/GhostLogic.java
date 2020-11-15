@@ -19,7 +19,7 @@ public class GhostLogic extends MinMaxLogic {
 
     @Override
     public int makeMove() {
-        int depth = 5;
+        int depth = 3;
         if (current_path.isEmpty()) {
             GhostMinMaxTree choice_tree = new GhostMinMaxTree(mapGraph,
                     depth,
